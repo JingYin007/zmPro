@@ -1,0 +1,44 @@
+<layout name="Public/layout" />
+<style>
+	.wxDialog,.wxdia{
+		margin-top: 33px;
+	}
+</style>
+<div class="wxDialog">
+	<center>
+		<div class="wxdia">
+			<img src="{:U('Order/wechatpaymenter',array(
+										'order_sn'=>$data['order_sn'],
+										'order_amount'=>$data['order_amount']))}" style="width:150px;height:150px;" />
+		</div>
+	</center> 
+</div>
+<script type="text/javascript">
+	$(function(){
+		var timer1 =setInterval(function(){check(timer1)},3000);
+	});
+
+	function check(timer1){
+		var order_sn = $("#order_sn").val();
+		var cart_id = $("#cart_id").val();
+		var homeUrl = "{:U('/index')}";
+
+		$.ajax({
+			type : "POST",
+			url: "{:U('Order/ajaxcheckorder')}",
+			dataType : "json",
+			data :{
+				order_sn:order_sn,
+			},
+			success : function(data){
+				//当前支付成功的状态
+				if (data.status == 1) {
+					dialog.tipPaySucc(data.message,homeUrl);
+					clearInterval(timer1);
+				}else {
+					//dialog.tipPayErr(data.message);
+				}
+			}
+		});
+	}
+</script>

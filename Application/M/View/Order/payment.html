@@ -1,0 +1,389 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="format-detection" content="telephone=no">
+    <title>支付</title>
+    <link href="__MCSS__/admin.css" rel="stylesheet" type="text/css" />
+    <link href="__MCSS__/upzhang.css" rel="stylesheet" type="text/css" />
+
+    <script type="text/javascript" src="__MJS__/jquery-1.8.0.min.js"></script>
+    <script type="text/javascript" src="__MJS__/order.js"></script>
+    <script type="text/javascript" src="__MJS__/pay.js"></script>
+    <script type="text/javascript" src="__MJS__/dialog/layer.js"></script>
+    <script type="text/javascript" src="__MJS__/dialog.js"></script>
+</head>
+<body>
+<div class="shdzxs">
+    <a onclick="toAddress()">
+        <div class="shdzxq" userAddr="{$userAddr0.consignee}">
+            <b class="consignee">{$userAddr0.consignee}&nbsp;{$userAddr0.mobile}</b>
+            <p class="address">{$userAddr0.address_name}&nbsp;{$userAddr0.address}</p>
+            <span class="delivery_note">{$userAddr0.delivery_note}</span>
+            <p class="tipAddUserAddrView">请点击此处添加收货地址</p>
+        </div>
+        <a onclick="toAddress()">
+            <div class="xgdzxq">＞</div>
+        </a>
+    </a>
+</div>
+<div id="div-payment">
+    <volist name="custom_ois" id="cois">
+        <div class="zfcplb div-order"  style="padding-bottom:0;"
+             price="{$cois.order_amount}" nums="{$cois.num}" num="1">
+            <h1>订单编号：{$cois.order_sn}</h1>
+            <div class="zfcpxq">
+                <div class="zfcptu">
+                    <img src="{$Think.config.FTP_SEVER}/{$cois.act_img}" />
+                </div>
+                <div class="zfcpmc">
+                    <div class="zfmccp">¥{$cois.order_amount}</div>
+                    <div class="zfmccp">{$cois.act_name}</div>
+                    <div class="zfmcfhsj">配送时间：{$deliveryDate}</div>
+                    <div class="zfmcpscp">本次配送：{$cois.custom_desc}</div>
+                </div>
+                <div class="zdpsan">
+                    <a href="{:U('User/customdistribution',array('sn'=>$cois['order_sn']))}">
+                        <input name="" type="button" value="自订配送" />
+                    </a>
+                </div>
+            </div>
+        </div>
+    </volist>
+
+
+    <div class="zfcplb">
+        <?php
+            if($ois[0]['order_sn']){ ?>
+        <h1>订单编号：{$ois[0]['order_sn']}</h1>
+        <?php } ?>
+
+        <volist name="ois" id="oi">
+            <div class="zfcpxq div-order" order_sn="{$oi.order_sn}"
+                 price="{$oi.price}" nums="{$oi.product_number}" num="{$oi.product_number}">
+
+                <div class="zfcptu">
+                    <img src="{$Think.config.FTP_SEVER}/{$oi.thumbnail}" />
+                </div>
+                <div class="zfcpmc">
+                    <div class="zfmccp">{$oi.product_name}</div>
+                    <!--<div class="zfmcgui">{$oi.desc}</div>-->
+                    <div class="zfmcfhsj">发货时间：48小时内</div>
+                </div>
+                <ul class="zfcpjg">
+                    <li>¥{$oi.rprice}</li>
+                   <!-- <li><s>¥{$oi.rprice}</s></li>-->
+                    <li>×{$oi.product_number}</li>
+                </ul>
+            </div>
+        </volist>
+        <div class="div-postage">
+            邮费：<p>￥<span id="span-postage">
+            <span class="postage">{$postage}</span>{$postage_tip}</span></p>
+        </div>
+        <div class="yhjxz" style="display: {$showCouponTag}">
+            <a href="{:U('User/cardcoupons',array('str_order_sn'=>$str_order_sn))}"
+               style="text-decoration:none">
+                <div class="yhjlb">
+                    请选择优惠劵<span>查看我的卡券包</span>
+                </div>
+            </a>
+            <volist name="useCoupons" id="use">
+                <div class="yhjxsz">
+                    <div class="zkxyzs">
+                        <span>{$use.discount}</span>折<img src="__MIMG__/yhjbk.jpg" /></div>
+                    <div class="zkxyjswz">
+                        <div class="yhjmcxy">
+                            <p>{$use.desc}</p>
+                            <span>{$use.over}张券即将到期</span></div>
+                        <div class="yhjslzs">X<span class="sum_{$use.c_id}">{$use.sum}</span></div>
+                        <div class="ljsyhj ljsyhj-{$use.c_id}">
+                            <input name="" type="button" attr-c_id="{$use.c_id}"
+                                   onclick="selButton('{$use.c_id}')" value="立即使用" /></div>
+                    </div>
+                    <div class="zkyhjsm">
+                        <h1></h1>
+                        <div class="zkyhjsmtext">
+                            {$use.rule}
+                        </div>
+                    </div>
+                </div>
+            </volist>
+
+            <!--<volist name="useCoupons" id="uc">
+                <div class="yhjsm">
+                    <span>{$uc.name}</span>已选择{$uc.name}&nbsp;{$uc.desc}
+                </div>
+            </volist>-->
+        </div>
+        <div class="zjyjrzs">
+        	<div class="yhtxzs"><img src="{$user_img}" /></div>
+            <div class="yhzfyzs">{$ad_word}</div>
+        </div>
+    </div>
+
+    <!--<div class="khfwan kf">
+        <a>
+            <img class="img-customer-service" src="{$Think.config.FTP_SEVER}/{$service_img}" alt="" style="display:none;"/>
+            <svg version="1.1" id="&#x56FE;&#x5C42;_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
+             y="0px" width="70px" height="40px" viewBox="0 0 79.167 37.354" style="enable-background:new 0 0 79.167 37.354;"
+             xml:space="preserve">
+        <g>
+            <rect x="6" y="7.167" style="fill:#FFFFFF;" width="66.333" height="23.75"/>
+            <path style="fill:#FF0066;" d="M13.127,14.727c0.762,0.893,1.77,1.626,2.994,2.203c1.439-0.619,2.591-1.354,3.468-2.203H13.127z
+                 M11.788,23.781h8.507v-2.49h-8.507V23.781z M13.127,14.727c0.762,0.893,1.77,1.626,2.994,2.203
+                c1.439-0.619,2.591-1.354,3.468-2.203H13.127z M11.788,23.781h8.507v-2.49h-8.507V23.781z M13.127,14.727
+                c0.762,0.893,1.77,1.626,2.994,2.203c1.439-0.619,2.591-1.354,3.468-2.203H13.127z M11.788,23.781h8.507v-2.49h-8.507V23.781z
+                 M27.291,14.295h2.36v-3.239h-2.36V14.295z M27.291,18.599h2.36v-3.252h-2.36V18.599z M35.48,17.146
+                c0.346,1.626,0.979,3.008,1.872,4.145c0.921-1.18,1.583-2.562,1.971-4.145H35.48z M35.48,17.146
+                c0.346,1.626,0.979,3.008,1.872,4.145c0.921-1.18,1.583-2.562,1.971-4.145H35.48z M27.291,18.599h2.36v-3.252h-2.36V18.599z
+                 M27.291,14.295h2.36v-3.239h-2.36V14.295z M13.127,14.727c0.762,0.893,1.77,1.626,2.994,2.203
+                c1.439-0.619,2.591-1.354,3.468-2.203H13.127z M11.788,23.781h8.507v-2.49h-8.507V23.781z M13.127,14.727
+                c0.762,0.893,1.77,1.626,2.994,2.203c1.439-0.619,2.591-1.354,3.468-2.203H13.127z M11.788,23.781h8.507v-2.49h-8.507V23.781z
+                 M27.291,14.295h2.36v-3.239h-2.36V14.295z M27.291,18.599h2.36v-3.252h-2.36V18.599z M35.48,17.146
+                c0.346,1.626,0.979,3.008,1.872,4.145c0.921-1.18,1.583-2.562,1.971-4.145H35.48z M35.48,17.146
+                c0.346,1.626,0.979,3.008,1.872,4.145c0.921-1.18,1.583-2.562,1.971-4.145H35.48z M27.291,18.599h2.36v-3.252h-2.36V18.599z
+                 M27.291,14.295h2.36v-3.239h-2.36V14.295z M13.127,14.727c0.762,0.893,1.77,1.626,2.994,2.203
+                c1.439-0.619,2.591-1.354,3.468-2.203H13.127z M11.788,23.781h8.507v-2.49h-8.507V23.781z M60.455-0.07H0v37.424h60.455
+                c10.334,0,18.712-8.378,18.712-18.712C79.167,8.307,70.789-0.07,60.455-0.07 M8.521,11.013h7.283
+                c-0.316-0.475-0.676-0.964-1.107-1.482l1.151-0.734c0.445,0.519,0.906,1.094,1.396,1.728l-0.777,0.489h7.14v3.153h-1.252v-2.044
+                H9.773v2.03H8.521V11.013z M21.547,25.566h-1.252V24.86h-8.507v0.706h-1.237v-5.355h10.997V25.566z M23.649,19.765
+                c-3.008-0.23-5.499-0.749-7.485-1.583c-2.187,0.879-4.851,1.526-8.016,1.915c-0.188-0.402-0.433-0.82-0.706-1.209
+                c2.835-0.288,5.253-0.762,7.241-1.41c-1.08-0.619-1.958-1.353-2.634-2.217c-0.835,0.806-1.713,1.54-2.62,2.173
+                c-0.245-0.287-0.533-0.589-0.878-0.906c2.001-1.353,3.527-2.807,4.592-4.333l1.237,0.518c-0.258,0.317-0.517,0.633-0.776,0.936
+                h7.772v1.051c-0.935,1.094-2.173,2.03-3.714,2.821c1.871,0.576,4.146,0.864,6.837,0.879C24.196,18.844,23.908,19.29,23.649,19.765
+                 M30.846,23.651c0,1.123-0.519,1.684-1.555,1.684c-0.575,0-1.107-0.014-1.612-0.058c-0.042-0.331-0.115-0.734-0.201-1.195
+                c0.575,0.086,1.065,0.129,1.483,0.129c0.459,0,0.69-0.23,0.69-0.69v-3.873h-2.36c0.042,2.591-0.432,4.563-1.397,5.917
+                c-0.245-0.317-0.561-0.634-0.92-0.936c0.749-1.166,1.123-2.807,1.123-4.937V9.962h4.75V23.651z M40.82,25.566
+                c-1.382-0.648-2.547-1.454-3.511-2.404c-0.864,0.849-1.871,1.598-3.038,2.231c-0.201-0.36-0.432-0.734-0.69-1.108
+                c1.122-0.576,2.101-1.252,2.907-2.059c-1.094-1.411-1.813-3.095-2.159-5.081h-0.792v8.392h-1.28V10.035h8.334
+                c-0.058,0.907-0.101,1.626-0.145,2.159c-0.086,1.742-0.979,2.591-2.663,2.562c-0.461-0.014-1.181-0.029-2.174-0.072
+                c-0.072-0.432-0.144-0.878-0.215-1.324c0.835,0.101,1.569,0.158,2.245,0.187c0.964,0.029,1.483-0.432,1.568-1.382
+                c0.03-0.302,0.058-0.619,0.073-0.964h-5.744v4.85h7.11v0.994c-0.445,1.971-1.267,3.699-2.461,5.152
+                c0.966,0.921,2.175,1.641,3.614,2.159C41.411,24.803,41.095,25.206,40.82,25.566 M55.401,22.658H54.64l-3.34,3.008
+                c-0.072,0.072-0.173,0.101-0.259,0.101c-0.058,0-0.129-0.014-0.187-0.043c-0.145-0.072-0.216-0.23-0.202-0.389l0.375-2.677h-1.886
+                c-0.216,0-0.388-0.173-0.388-0.389V10.308c0-0.216,0.172-0.389,0.388-0.389h17.589c0.217,0,0.39,0.173,0.39,0.389v2.246
+                c0,0.216-0.173,0.389-0.39,0.389c-0.215,0-0.388-0.173-0.388-0.389v-1.857H49.53v11.184h1.943c0.115,0,0.216,0.043,0.288,0.129
+                s0.115,0.202,0.086,0.302l-0.273,2.073l2.663-2.404c0.071-0.072,0.159-0.101,0.258-0.101h0.907c0.216,0,0.39,0.172,0.39,0.389
+                C55.791,22.485,55.618,22.658,55.401,22.658 M71.394,25.12h-2.288l0.316,3.181c0.014,0.158-0.072,0.302-0.201,0.374
+                c-0.058,0.043-0.129,0.058-0.187,0.058c-0.087,0-0.173-0.029-0.23-0.072l-4.766-3.541h-6.274c-0.217,0-0.39-0.173-0.39-0.389
+                v-7.917v-0.029v-2.073c0-0.058,0.016-0.101,0.03-0.159c0.028-0.043,0.058-0.086,0.101-0.115c0.042-0.043,0.1-0.072,0.143-0.086
+                c0.044-0.015,0.102-0.029,0.144-0.029h13.603c0.187,0,0.346,0.129,0.374,0.316v10.177C71.739,24.99,71.581,25.12,71.394,25.12
+                 M35.48,17.146c0.346,1.626,0.979,3.008,1.872,4.145c0.921-1.18,1.583-2.562,1.971-4.145H35.48z M29.651,15.346h-2.36v3.252h2.36
+                V15.346z M29.651,11.057h-2.36v3.239h2.36V11.057z M20.295,21.291h-8.507v2.49h8.507V21.291z M13.127,14.727
+                c0.762,0.893,1.77,1.626,2.994,2.203c1.439-0.619,2.591-1.354,3.468-2.203H13.127z M11.788,23.781h8.507v-2.49h-8.507V23.781z
+                 M13.127,14.727c0.762,0.893,1.77,1.626,2.994,2.203c1.439-0.619,2.591-1.354,3.468-2.203H13.127z M27.291,14.295h2.36v-3.239
+                h-2.36V14.295z M27.291,18.599h2.36v-3.252h-2.36V18.599z M35.48,17.146c0.346,1.626,0.979,3.008,1.872,4.145
+                c0.921-1.18,1.583-2.562,1.971-4.145H35.48z M35.48,17.146c0.346,1.626,0.979,3.008,1.872,4.145
+                c0.921-1.18,1.583-2.562,1.971-4.145H35.48z M27.291,18.599h2.36v-3.252h-2.36V18.599z M27.291,14.295h2.36v-3.239h-2.36V14.295z
+                 M11.788,23.781h8.507v-2.49h-8.507V23.781z M13.127,14.727c0.762,0.893,1.77,1.626,2.994,2.203
+                c1.439-0.619,2.591-1.354,3.468-2.203H13.127z M11.788,23.781h8.507v-2.49h-8.507V23.781z M13.127,14.727
+                c0.762,0.893,1.77,1.626,2.994,2.203c1.439-0.619,2.591-1.354,3.468-2.203H13.127z M27.291,14.295h2.36v-3.239h-2.36V14.295z
+                 M27.291,18.599h2.36v-3.252h-2.36V18.599z M27.291,18.599h2.36v-3.252h-2.36V18.599z M27.291,14.295h2.36v-3.239h-2.36V14.295z
+                 M11.788,23.781h8.507v-2.49h-8.507V23.781z M13.127,14.727c0.762,0.893,1.77,1.626,2.994,2.203
+                c1.439-0.619,2.591-1.354,3.468-2.203H13.127z M13.127,14.727c0.762,0.893,1.77,1.626,2.994,2.203
+                c1.439-0.619,2.591-1.354,3.468-2.203H13.127z M13.127,14.727c0.762,0.893,1.77,1.626,2.994,2.203
+                c1.439-0.619,2.591-1.354,3.468-2.203H13.127z"/>
+        </g>
+        </svg>
+        </a>
+    </div>-->
+
+    <div class="dfkcpzj zfdbjl">
+        共计
+        <p class="wx_allNum">{$wx_allNum}</p>&nbsp;件，合计：
+        <p>¥
+        <p class="wx_allPrice">{$wx_allPrice}</p>
+    </div>
+    <div class="dfkljzf zfdbjl">
+        <input name="" type="button" onclick="wxToPay()" value="支付订单" />
+    </div>
+    <!--<form action="{:U('Cartpay/payTest')}" method="get" id="form-toWxPayOrder">
+        <input name="out_trade_no" value="{$order_sn}" type="hidden" />
+    </form>-->
+    <form action="http://www.52zhenmi.com/M/Cartpay/pay" method="get" id="form-toWxPayOrder">
+        <input name="out_trade_no" value="{$order_sn}" type="hidden" />
+    </form>
+
+</div>
+
+<div id="div-address" style="display: none">
+    <div id="div-address-view">
+        <volist name="userAddr" id="addr">
+            <div class="bjdzxq" status="{$addr.status}"
+                 id="div-addr-{$addr.address_id}" >
+                <div class="bjgrdz" onclick="btnAddrSel('{$addr.address_id}')">
+                    <button type="button">◉</button>
+                </div>
+                <ul class="bjxqdz">
+                    <li>{$addr.consignee}&nbsp;{$addr.mobile}
+                        <span><a onclick="delUserAddr('{$addr.address_id}')">删除</a></span>
+                    </li>
+                    <li>{$addr.address_name}&nbsp;{$addr.address}</li>
+                </ul>
+            </div>
+        </volist>
+    </div>
+    <div class="xzyhdz">
+        <input name="" type="button" value="+新增地址" onclick="upAddNewMsg()" />
+    </div>
+    <form class="form-addNewMsg" id="form-addNewMsg">
+        <div class="div-addNewMsg">
+            <label>姓名：</label>
+            <input type="text" name="consignee"/>
+            <br/><br/>
+            <label>电话：</label>
+            <input type="text" name="mobile"/>
+            <br/><br/>
+            <label>地址：</label>
+            <input name="address" type="text" placeholder="请输入详细地址" />
+            <br/><br/>
+            <label>备注：</label>
+            <select name="delivery">
+                <volist name="delivery" id="d">
+                    <option value="{$d.id}">{$d.delivery_note}</option>
+                </volist>
+            </select>
+            <br/><br/>
+            <input type="button" value="添加" onclick="addNewMsg()" class="qrtjdz"/>
+            <input type="reset" value="重置" class="cztjdz"/>
+        </div>
+    </form>
+</div>
+</body>
+
+<script>
+    var showTag = 0;
+    view_customer_service_img(showTag);
+    var addressViewShowTag = 0;
+    var tag = 0;
+    var userAddrTag = $(".shdzxq").attr('userAddr');
+    if (userAddrTag){
+        $(".tipAddUserAddrView").hide();
+    }else {
+        $(".tipAddUserAddrView").show();
+    }
+
+    addrLoadInitView();
+
+    function wxToPay() {
+        //ajax 检查是否拥有默认收货地址
+        var toUrl = "{:U('Order/ajaxCheckDefaultAddr')}";
+        toCheckDefaultAddr(toUrl);
+    }
+    function btnAddrSel(address_id) {
+        var selTag = greenBtnTag("#div-addr-"+address_id+" button");
+        var toUrl = "{:U('Order/ajaxSetDefaultAddr')}";
+        toBtnAddrSel(address_id,selTag,toUrl);
+    }
+    //删除收货地址
+    function delUserAddr(addr_id) {
+        var toUrl = "{:U('Order/ajaxDelAddr')}";
+        toDelUserAddr(toUrl,addr_id);
+    }
+    //编辑收货地址
+    function editUserAddr(addr_id) {
+        var toUrl = "{:U('Order/ajaxEditAddr')}";
+        toEditUserAddr(toUrl,addr_id);
+    }
+    //添加收货地址
+    function addNewMsg() {
+        var toUrl = "{:U('Order/ajaxAddUserAddr')}";
+        var postData =  $("#form-addNewMsg").serialize();
+        var afterHtml = "";
+        $.post(
+                toUrl,
+                postData,
+                function (result) {
+                    layer.msg(result.message);
+                    if(result.status == 1){
+                        //成功
+                        //location.reload();
+                        $(".tipAddUserAddrView").hide();
+                        addAfterHtml(result,afterHtml);
+                    }
+                },"JSON");
+    }
+	$(document).ready(function(){
+        var aac=$(".yhtxzs img").width();
+        $(".yhtxzs img").css("height", aac);
+    });
+	$(document).ready(function(){
+        var aac=$(".yhtxzs img").height();
+		var bbc=$(".yhzfyzs").height();
+        $(".yhzfyzs").css("padding-top", (aac - bbc) / 2);
+		//alert(bbc);
+    });
+	$(document).ready(function(){
+	   $(".zkyhjsm h1").toggle(function(){
+		 $(this).next(".zkyhjsmtext").animate({height: 'toggle', opacity: 'toggle'}, "slow");
+	   },function(){
+		 $(this).next(".zkyhjsmtext").animate({height: 'toggle', opacity: 'toggle'}, "slow");
+	   });
+	});
+	$(document).bind("click",function(e){
+		$('div').closest('.zkyhjsmtext').each(function(){
+			if(e.target != this){
+				$(this).hide("slow");
+			}
+		});
+	});
+    function selButton(c_id) {
+        var toUrl = "{:U('Order/ajaxSetUseCoupon')}";
+        var strOrder_sn = "{$str_order_sn}";
+        $.post(
+                toUrl,
+                {'strOrder_sn':strOrder_sn,'tag':c_id},
+                function (result) {
+                    getAllPrice();
+                    var sumTag = $(".sum_"+c_id);
+                    if(result.status == 1){
+                        selEffect(c_id,sumTag,1)
+                    }else{
+                        if (result.status == -1){
+                            selEffect(c_id,sumTag,0)
+                        }
+                    }
+                    layer.msg(result.message,{time:1100});
+                },"JSON");
+    }
+    function getAllPrice() {
+        var toUrl = "{:U('Order/ajaxGetAllPrice')}";
+        var order_sn = "{$order_sn}";
+        $.post(
+                toUrl,
+                {'order_sn' : order_sn,},
+                function (result) {
+                    $(".postage").html(result.data.postage);
+                    $(".wx_allPrice").html(result.data.wx_allPrice.toFixed(2));
+                },"JSON");
+    }
+    function selEffect(c_id,sumTag,tag) {
+        var currSum = parseInt(sumTag.html());
+        var inputTag = $(".ljsyhj-"+c_id+" input");
+        if (tag == 1){
+            sumTag.html(parseInt(currSum-1));
+            inputTag.val('您已选择');
+            dealSelView();
+            inputTag.addClass('ljsyhjdjxg');
+        }else {
+            sumTag.html(parseInt(currSum+1));
+            inputTag.val('立即使用');
+            inputTag.removeClass('ljsyhjdjxg');
+        }
+    }
+    function dealSelView() {
+        $(".ljsyhjdjxg").each(function () {
+            var c_id = $(this).attr("attr-c_id");
+            var sumTag = $(".sum_"+c_id);
+            var currSum = parseInt(sumTag.html());
+            sumTag.html(parseInt(currSum + 1));
+
+            var inputTag = $(this);
+            inputTag.val('立即使用');
+            inputTag.removeClass('ljsyhjdjxg');
+        })
+    }
+</script>
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="format-detection" content="telephone=no">
+    <title>优惠劵</title>
+    <link href="__MCSS__/admin.css" rel="stylesheet" type="text/css" />
+
+    <script type="text/javascript" src="__MJS__/jquery-1.8.0.min.js"></script>
+    <script type="text/javascript" src="__MJS__/order.js"></script>
+    <script type="text/javascript" src="__MJS__/dialog/layer.js"></script>
+    <script type="text/javascript" src="__MJS__/dialog.js"></script>
+</head>
+
+<body>
+<volist name="useCoupons" id="use">
+    <div class="dlyhj">
+        <div class="kjxyms">{$use.discount}<span>折</span></div>
+        <div class="kjmbxq">
+            <img addTime="{$use.add_time|date='Y-m-d',###}"
+                 nowTime="{$nowTime|date='Y-m-d',###}"
+                 src=__MIMG__/kjjbt.png class="kjjbt"/>
+            <div class="kjxtop">
+                <p>真米</p>
+                <span>{$use.desc}</span>
+            </div>
+            <div class="kjyxqxs">
+                <p>发放日期:{$use.add_time|date='Y-m-d',###}
+                    <input name="" type="button"
+                           status="{$use.status}"
+                           onclick="selButton('{$use.id}')"
+                    <?php
+                        if($use['status'] == 1){
+                         echo "value='取消使用'";
+                        }else{
+                         echo "value='立即使用'";
+                        }
+                    ?>
+                    />
+                </p>
+                <span>有效期至:{$use.use_time|date='Y-m-d',###}</span>
+            </div>
+        </div>
+    </div>
+</volist>
+
+<form action="{:U('Order/payment')}" method="post" id="form-coupon">
+    <input type="hidden" id="up-order" name="order_sn" value="{$str_order_sn}"/>
+</form>
+</body>
+<script>
+    var img_newCome = $(".kjmbxq img");
+    img_newCome.hide();
+    img_newCome.each(function () {
+        var addTime = $(this).attr('addTime');
+        var nowTime = $(this).attr('nowTime');
+        if(addTime == nowTime){
+            $(this).show();
+        }
+    });
+
+    function selButton(uc_id) {
+        var toUrl = "{:U('Order/ajaxSetUseCoupon')}";
+        var strOrder_sn = $("#up-order").val();
+        $.post(
+                toUrl,
+                {'strOrder_sn':strOrder_sn,'tag':uc_id},
+                function (result) {
+                        layer.msg(result.message);
+                        $("#form-coupon").submit();
+                },"JSON");
+    }
+</script>
+</html>

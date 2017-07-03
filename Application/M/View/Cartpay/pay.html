@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="content-type" content="text/html;charset=utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>真米如初</title>
+    <script type="text/javascript" src="__MJS__/jquery-1.8.0.min.js"></script>
+    <script type="text/javascript" src="__MJS__/dialog/layer.js"></script>
+    <script type="text/javascript" src="__MJS__/dialog.js"></script>
+    <style>
+        *{margin:0px;padding:0px;  font-weight:bold;}
+        .inner_div{text-align:center; margin:auto; overflow:hidden; padding:10px; }
+        .top{ padding-top:20px; border-bottom:2px  #CCCCCC solid; padding-bottom:20px;}
+        .top .logo{ }
+        .top .logo img{ width:50%; border:none; margin: 0px auto;}
+        .top .return{ text-decoration:none;}
+        .top .return:hover{ color:#000;}
+        .middle{ text-align:center;}
+        .middle .title{ font-size:24px; line-height:40px; width: 100%}
+        .middle .order{ font-size:14px; line-height:25px; width: 100%}
+        .middle .money{ font-size:14px; line-height:25px; width: 100%}
+        .act{text-align:center; }
+        .act img{width:50%; }
+    </style>
+</head>
+<body style="text-align: center;">
+
+<!-- <button onclick="getOrder()">购买</button> -->
+<div class="out_div">
+    <div class="inner_div">
+        <!-- <div class="top"><a href="/weixin/m/" target=_blank class=logo><img src="/weixin/m/theme/default/images/paylogo.jpg" /></a></div> -->
+        <div class="middle">
+            <div class="title">真米如初</div>
+            <div class="order">订单编号:{$out_trade_no}</div>
+            <div class="order">订单状态:{$content}</div>
+
+            <div class=" tip div-success" style="display: none">
+                <p>支付成功</p>
+                <a href="{:U('Index/index')}">返回首页</a>
+                &nbsp;&nbsp;
+                <a href="{:U('Order/grdcx')}">查看订单</a>
+            </div>
+            <div class=" tip div-fail" style="display: none">
+                <p>支付不成功</p>
+                <a href="{:U('Index/index')}">返回首页</a>
+            </div>
+            <div class="act">
+                <br /><button style="width:210px; height:50px; border-radius: 15px;background-color:#FE6714; border:0px #FE6714 solid; cursor: pointer;  color:white;  font-size:16px;" type="button" onClick="callpay()" >微信立即支付</button>
+                <br /><br /><br /><a href="javascript:history.go(-1);" target=_blank class=return></a>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script>
+
+    function onBridgeReady(){
+        var data={$data};
+        WeixinJSBridge.invoke(
+                'getBrandWCPayRequest', data,
+                function(res){
+                    if(res.err_msg == "get_brand_wcpay_request:ok" ) {
+                        // 使用以上方式判断前端返回,微信团队郑重提示：res.err_msg将在用户支付成功后返回    ok，但并不保证它绝对可靠。
+                        $(".div-success").show();
+                        $(".div-fail").hide();
+                    }else{
+                        $(".div-success").hide();
+                        $(".div-fail").show();
+                    }
+                }
+        );
+    }
+
+    function callpay()
+    {
+        if (typeof WeixinJSBridge == "undefined"){
+            if( document.addEventListener ){
+                document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);
+            }else if (document.attachEvent){
+                document.attachEvent('WeixinJSBridgeReady', onBridgeReady);
+                document.attachEvent('onWeixinJSBridgeReady', onBridgeReady);
+            }
+        }else{
+            onBridgeReady();
+        }
+    }
+
+    $(document).ready(function(){
+        callpay();
+    });
+
+</script>
+
+</body>
+</html>

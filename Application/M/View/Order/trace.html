@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+   <style>
+       .time{
+           color: #383b3c;
+           font-weight: bold;
+       }
+       .content{
+           color: #8b050a;
+           font-weight: bold;
+       }
+   </style>
+</head>
+<body>
+<p></p>
+    <h3>快递公司：{$comName}</h3>
+    <volist name="trace" id = "v">
+        <span class="time">{$v.time}</span>
+        <span class="content">{$v.context}</span>
+        <br/>
+        <hr/>
+    </volist>
+</body>
+</html>
