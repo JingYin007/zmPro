@@ -1015,8 +1015,14 @@ class OrderController extends MZhenmiController
         $order_sn = I('get.order_sn');
         $cartPayController = new CartpayController();
         $order_amount = $cartPayController->wxPayOrder($order_sn,0);
+        $oiRes = M('order_info oi')
+            ->field('oi.order_amount,og.product_name')
+            ->join('ms_order_goods og on oi.order_id = og.order_id')
+            ->where('oi.order_sn = '.$order_sn)
+            ->find();
+        $proName = $oiRes['product_name'];
         $order=array(
-            'body'=>'真米如初',
+            'body'=>'真米如初-'.$proName,
             'total_fee'=>$order_amount * 100,
             'out_trade_no'=> $order_sn.'M'.time(),// 订单号（需要根据自己的业务修改）,
             'product_id'=>1
