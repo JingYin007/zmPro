@@ -1,0 +1,62 @@
+ul.foot li a.active{
+    -webkit-filter: grayscale(0%);
+    -moz-filter: grayscale(0%);
+    -ms-filter: grayscale(0%);
+    -o-filter: grayscale(0%);
+    filter: grayscale(0%);
+    filter: gray;
+}
+.form-addNewMsg{
+    display: none;
+	margin:5% 0 0 15%;
+}
+.foot-yhjxz{
+    height: 60px;
+}
+ul.foot li a.active svg,ul.foot li a svg{
+	width:100%;
+}
+ul.foot li a.active svg path{
+	fill:#FF0066;
+}
+ul.foot li a svg path{
+	fill:#666666;
+}
+.div-addNewMsg input{
+	width:70%;
+	height:20px;
+}
+.qrtjdz,.cztjdz{
+	width:40%!important;
+	height:30px!important;
+	float:left;
+	color:#FFF;
+	background:#C36;
+	border:none;
+	margin:5% 5% 5% 0;
+}
+.cztjdz{
+	background:#999;
+	font-weight: bold;
+}
+.div-postage{
+	font-family: "microsoft yahei";
+	font-weight: bold;
+	color: #333;
+	line-height: 30px;
+	font-size: 11pt;
+	padding: 0 4%;
+	float:left;
+	width:92%;
+}
+.div-postage p{
+	display: inline;
+	color: #ff0066;
+	font-weight: bold;
+	margin-left: 1%;
+}
+p.tipAddUserAddrView{
+	margin: 0 auto;
+	width:200px;
+	margin-top: -30px;
+}

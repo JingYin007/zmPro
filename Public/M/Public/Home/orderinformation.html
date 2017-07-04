@@ -1,0 +1,120 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0"> 
+<meta name="format-detection" content="telephone=no">
+<title>真米如初</title>
+<link href="css/admin.css" rel="stylesheet" type="text/css" />
+<script src="js/jquery-1.8.0.min.js"></script>
+</head>
+
+<body>
+<div class="main">
+	<div class="qzlogo"><img src="img/logo.png" /></div>
+	<div class="topbg">
+	  <div class="dlzty"><p><a href="#">登录</a></p><span><a href="#">我的订单</a></span></div>
+        <div class="qzczgn"><input name="" type="text" class="czksr"/><input name="" type="button" class="czkan" id="jxcz"/><label for="jxcz"><img src="img/czan.png" /></label></div>
+        <ul class="qzdht">
+            <li><a href="#" class="xzct">信息确认</a></li>
+            <li><a href="#">返回首页</a></li>
+      </ul>
+    </div>
+    <div class="grdzx">
+        <div class="shdz">收货地址<p onclick="djtjxdz()"><a href="###">添加新地址</a></p><span>+</span></div>
+        <div class="shdzxz" id="shdzxz">
+            <ul id="box" class="ycshdz">
+                <li>
+                    <h1>李雪峰</h1>
+                    <p>18600000000</p>
+                    <span>地址地址地址地址地址地址地址地址地址地址地址地址地址地址地址地址地址地址地址地址地址地址地址地址地址地址地址地址地址地址地址地址地址</span>
+                    <h3 class="djscdz" id="djscdz"><a href="###">删除</a></h3>
+                    <h2 class="djswmr" id="djswmr"><a href="###">取消默认</a></h2>
+                </li>
+                <li>
+                    <input name="" type="checkbox" value="" class="dzszmr djxs" id="dzszmr"/>
+                    <h1>李雪峰</h1>
+                    <p>18600000000</p>
+                    <span>地址地址地址地址地址地址地址地址地址地址地址地址地址地址地址地址地址地址地址地址地址地址地址地址地址地址地址地址地址地址地址地址地址</span>
+                    <h3 class="djscdz djxs"><a href="###">删除</a></h3>
+                    <h2 class="djswmr djxs"><a href="###">设为默认</a></h2>
+                </li>
+            </ul>
+            <div id="tog" class="djzksq" onclick="djghdz()">查看其他</div>
+        </div>
+        <div class="txshdz" id="txshdz">
+        	<ul class="txdzzb">
+            	<li>姓名：</li>
+                <li>电话：</li>
+                <li>详细地址：</li>
+          </ul>
+            <ul class="txdzyb">
+            	<li><input name="" type="text" class="tgrxy"/></li>
+                <li><input name="" type="text" class="tgrxy"/></li>
+                <li><textarea name="" cols="" rows=""></textarea></li>
+                <li><input name="" type="checkbox" value="" class="swmr" id="qxann"/><label for="qxann"></label><p><label for="qxann">设为默认</label></p></li>
+                <li><input name="" type="button" value="确认" class="qrdz"/><a href="###" onclick="djfqxdz()">放弃</a></li>
+            </ul>
+        </div>
+        <div class="shdz">商品信息</div>
+        <div class="cpxklb">
+            <div class="dzcplb">
+                <a href="###"><img src="img/ggt.jpg" /></a>
+                <h1><a href="###">商品名称商品名称商品名称商品名称商品名称商品名称商品名称商品名称</a></h1>
+                <p>数量：12</p><span>小计：123.00￥</span>
+            </div>
+        </div>
+        <div class="kqxxz"><a href="###">卡券：无/卡券名称<span>>></span></a></div>
+        <div class="cpjgzj">合计：12315￥</div>
+        <div class="cpjgzj">总计：12315￥</div>
+        <div class="cpjgzj"><input name="" type="button" value="付款" /></div>
+        <div class="cpjgzj">运费：315￥</div>
+	</div>
+</div>
+<script>
+function djtjxdz(){
+	document.getElementById('txshdz').className='txshdz djxs';
+	document.getElementById('shdzxz').className='shdzxz djyc';
+}
+function djfqxdz(){
+	document.getElementById('txshdz').className='txshdz djyc';
+	document.getElementById('shdzxz').className='shdzxz djxs';
+}
+function djghdz(){
+	document.getElementById('dzszmr').className='dzszmr djxs';
+	document.getElementById('djscdz').className='djscdz djxs';
+	document.getElementById('djswmr').className='djswmr djxs';
+}
+function shouqi(){
+	document.getElementById('dzszmr').className='dzszmr djyc';
+	document.getElementById('djscdz').className='djscdz djyc';
+	document.getElementById('djswmr').className='djswmr djyc';
+}
+</script>
+<script type="text/javascript">
+$(document).ready(function(){
+	var aac=$(".cpdgbk").height();
+	$(".dfkyb").css("padding-top", aac / 2 - 45.5);
+});
+</script>
+<script>
+var len=$("#box li").length;
+	function int(){
+	for(i=1;i<len;i++){
+	$("#box li").eq(i).addClass("hid");   
+	}
+	}
+	$("#tog").click(function(){
+	var t=$(this).text();
+	if(t=="查看其他"){
+	$("#box .hid").addClass("show");
+	$(this).text("收起");
+	}else{
+	$("#box .hid").removeClass("show");
+	$(this).text("查看其他");
+	}  
+	});
+	int();
+</script>
+</body>
+</html>

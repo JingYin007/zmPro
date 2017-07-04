@@ -12,9 +12,14 @@
     <script type="text/javascript" src="__MJS__/dialog/layer.js"></script>
     <script type="text/javascript" src="__MJS__/dialog.js"></script>
 </head>
-<style>
-    .wxDialog,.wxdia{
-        margin-top: 33px;
+<style type="text/css">
+    body{ background:#EEEEEE;margin:0; padding:0; font-family:"微软雅黑", Arial, Helvetica, sans-serif; }
+    a{ color:#006600; text-decoration:none;}
+    a:hover{color:#990000;}
+    .info select{ border:1px #993300 solid; background:#FFFFFF;}
+    .info{
+        margin-left: 5%;
+        padding-left: 6px;
     }
 </style>
 <body class="grzxbjk">
@@ -26,97 +31,98 @@
     <div class="singzhms yjtpbh order-input">
         <input name="mobile" id="mobile" type="number" placeholder = "收货人手机号"/>
     </div>
+    <div class="info" style="display: none">
+        <div>
+            <select id="s_province" name="s_province"></select>  
+            <select id="s_city" name="s_city" ></select>  
+            <select id="s_county" name="s_county"></select>
+            <script class="resources library" src="__MJS__/area.js" type="text/javascript"></script>
+            <script type="text/javascript">_init_area();</script>
+        </div>
+    </div>
+
     <div class="singzhms yjtpbh order-input">
-        <input name="city1" id="city1" type="text" placeholder="省份/城市/区县"/>
+        <input name="city1" id="city1" type="text" placeholder="省份/城市/区县" style="width:100%;"/>
     </div>
     <div class="singzhms yjtpbh order-input">
-        <input name="city2" id="city2" type="text" placeholder="详细地址，如街道、门牌号等"/>
+        <input name="city2" id="city2" type="text" placeholder="详细地址，如街道、门牌号等" style="width:100%;"/>
     </div>
     <input type="hidden" name="order_sn" value="{$res.order_sn}"/>
-    <input type="hidden" name="pay_type" id="pay_type" value="none"/>
+    <input type="hidden" name="pay_type" id="pay_type" value="ali"/>
 </form>
 <div class="srmtop">选择支付方式</div>
 <div class="zfxzfs">
-    <p onclick="selRadio('ali')">
-        <button type="radio" class="btnRadio btn-ali" name="TR">◉</button>
-        <img src="__MIMG__/26.jpg" />
+    <p onclick="selRadio('ali')" class="zfyxhx">
+    	<label class="radio">
+            <input type="radio" class="btnRadio btn-ali" checked="checked" name="TR">
+            <i></i>支付宝支付<img src="__MIMG__/26.jpg" />
+        </label>
     </p>
     <p onclick="selRadio('wx')">
-        <button type="radio" class="btnRadio btn-wx" name="TR" >◉</button>
-        <img src="__MIMG__/22.jpg" />
+    	<label class="radio">
+            <input type="radio" class="btnRadio btn-wx" name="TR" >
+            <i></i>微信支付<img src="__MIMG__/27.jpg" />
+        </label>
     </p>
+    <div class="wxzfsmwz" style="display: none;">
+        <img src="{:U('Order/wechatpaymenter',array('order_sn'=>$res['order_sn']))}" />
+        <h1>方式一：用其他手机微信扫描此二维码即可付款；</h1>
+        <h1>方式二：保存二维码，在微信端识别二维码付款；</h1>
+        <h1>方式三：微信搜索“真米如初官网”公众号，关注并进入网站购买；</h1>
+    </div>
 </div>
 <div class="dlzcan" onclick="nextToPay()">
-    <input name="" type="button" value="下一步"/>
+    <input name="" id="nextTo" type="button" value="下一步"/>
 </div>
-<div class="wxDialog" style="display: none;">
-    <center>
-        <div class="wxdia">
-            <img src="{:U('Order/wechatpaymenter',array('order_sn'=>$res['order_sn']))}" style="width:150px;height:150px;" />
-        </div>
-    </center>
-</div>
+
+<script type="text/javascript">
+    $("#city1").click(function () {
+        $(".info").show();
+        $("#city1").hide();
+    });
+    $("#s_county").change(function() {
+        var str = $('#s_province').val()+"/"
+                + $('#s_city').val()+"/"
+                + $('#s_county').val();
+        $("#city1").val(str);
+        $("#city1").show();
+        $(".info").hide();
+    });
+</script>
+
 </body>
 <script>
-    var btn  = document.getElementsByTagName("button");
-    for(var i=0;i<btn.length;i++){
-        (function(index){
-            btn[index].onclick = function(){
-                if(btn[index].style.color === "red"){
-                    btn[index].style.color = "";
-                }else{
-                    btn[index].style.color = "red";
-                }
-            }
-        }(i))
-    }
-
     function selRadio(type) {
-        var pay_type = $('#pay_type').val(type);
-        var selTag = redBtnTag($(".btn-"+type));
-        $(".btnRadio").css("color","");
-        if (selTag){
-            $(".btn-"+type).css('color',"red")
+        var toUrl = "{:U('Order/ajax_deal_orderSn')}";
+        $("#pay_type").val(type);
+        if (checkInputMsg()){
+            $.post(
+                    toUrl,
+                    $("#form-mobile").serialize(),
+                    function (e) {
+                        if(type == 'ali'){
+                            $(".wxzfsmwz").hide();
+                            $("#nextTo").val('下一步');
+                        }else {
+                            $(".wxzfsmwz").show();
+                            $("#nextTo").val('再逛逛');
+                        }
+                    },"JSON");
         }
     }
     function nextToPay() {
         var pay_type = $('#pay_type').val();
-        var toUrl = "{:U('Order/ajax_deal_orderSn')}";
         if (pay_type == 'none'){
             layer.msg('请选择支付方式',{'time':1000});
         }else if (pay_type == 'wx'){
             if (checkInputMsg()){
-                $.post(
-                        toUrl,
-                        $("#form-mobile").serialize(),
-                        function (result) {
-                            if(result.status != 1){
-                                layer.msg(result.message);
-                            }else {
-                                layer.msg('支付功能开发中...',{'time':1000});
-                                //$(".wxDialog").show();
-                            }
-                        },"JSON");
-
+                $(".wxzfsmwz").show();
+                window.location.href = "{:U('Index/index')}";
             }
-
-            //layer.msg('支付功能开发中...',{'time':1000});
         } else {
             if (checkInputMsg()){
-                $.post(
-                        toUrl,
-                        $("#form-mobile").serialize(),
-                        function (result) {
-                            if(result.status != 1){
-                                layer.msg(result.message);
-                                //layer.msg('支付功能开发中...',{'time':1000});
-                            }else {
-                                $("#form-mobile").submit();
-                            }
-                        },"JSON");
-
+                $("#form-mobile").submit();
             }
-            //layer.msg('支付功能开发中...',{'time':1000})
         }
     }
     function checkInputMsg() {
