@@ -103,23 +103,32 @@
                         if(type == 'ali'){
                             $(".wxzfsmwz").hide();
                             $("#nextTo").val('下一步');
-                        }else {
-                            $(".wxzfsmwz").show();
-                            $("#nextTo").val('再逛逛');
                         }
                     },"JSON");
         }
     }
     function nextToPay() {
+        var toUrl = "{:U('Order/ajax_deal_orderSn')}";
+        var flag = $("#nextTo").val();
         var pay_type = $('#pay_type').val();
         if (pay_type == 'none'){
             layer.msg('请选择支付方式',{'time':1000});
         }else {
             if (checkInputMsg()){
-                if (pay_type == 'wx'){
+                if(flag == '再逛逛'){
                     window.location.href = "{:U('Index/index')}";
+                }
+                if (pay_type == 'wx'){
+                    $(".wxzfsmwz").show();
+                    $("#nextTo").val('再逛逛');
                 }else{
-                    $("#form-mobile").submit();
+                    $.post(
+                            toUrl,
+                            $("#form-mobile").serialize(),
+                            function (e) {
+                                $("#form-mobile").submit();
+                            },"JSON");
+
                 }
             }
         }

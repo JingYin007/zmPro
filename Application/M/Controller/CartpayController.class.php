@@ -12,18 +12,6 @@ use M\Model\UserModel;
 use Think\Controller;
 class CartpayController extends Controller
 {
-
-    private $userModel;
-    private $oiModel;
-    private $couponModel;
-    public function __construct()
-    {
-        parent::__construct();
-        $this->userModel = new UserModel();
-        $this->oiModel = new OrderModel();
-        $this->couponModel = new CouponModel();
-    }
-
     public function index(){
         $this->display();
     }
@@ -39,7 +27,7 @@ class CartpayController extends Controller
                 ->join('ms_order_goods og on oi.order_id = og.order_id')
                 ->where('oi.order_sn = '.$out_trade_no)
                 ->find();
-            $order_amount = $this->wxPayOrder($out_trade_no,0);
+            $order_amount = $this->wxPayOrder($out_trade_no);
             $proName = $oiRes['product_name'];
             Vendor('Alipay.aop.AopClient');
             Vendor('Alipay.aop.request.AlipayTradeWapPayRequest');
@@ -77,7 +65,7 @@ class CartpayController extends Controller
      */
     public function ali_notify(){
         $out_trade_no = I('post.out_trade_no');
-        $this->toUpdatePayInfo($out_trade_no,2);
+        $this->toUpdatePayInfo($out_trade_no,'ali');
         echo 'success';
     }
     /**
@@ -95,7 +83,6 @@ class CartpayController extends Controller
             ->where('order_sn = '.$out_trade_no)
             ->find();
         $pay_status = $oiRes['pay_status'];
-        $user_id = $oiRes['user_id'];
         //获取配置表中的支付开启状态
         $wxPayTag = M('conf')
             ->where('id = 1')
@@ -118,7 +105,6 @@ class CartpayController extends Controller
         }
         $this->assign('out_trade_no',$out_trade_no);
         $this->assign('content',$content);
-        //$this->assign('total_fee',number_format($data['total_fee']/100, 2));
         $this->assign($assign);
         $this->display();
     }
@@ -150,10 +136,10 @@ class CartpayController extends Controller
     /**
      * 进行更新支付后的数据处理
      * @param $value 订单号
-     * @param int $pay_id 支付方式
-     * @return int
+     * @param string $pay_type 支付方式 ：TODO 可用于支付方式的后续数据处理
+     * @return mixed
      */
-    public function toUpdatePayInfo($value,$pay_id = 1)
+    public function toUpdatePayInfo($value,$pay_type = 'wx')
     {
         $order_info = M('order_info')
             ->field('pay_status,order_amount,user_id')
@@ -162,229 +148,21 @@ class CartpayController extends Controller
         // 更新的条件
         if ($order_info['pay_status'] == 0) {
             //TODO 执行数据库更新操作
-            $tag = $this->oiModel->wxPayAfterUpdate($value,$pay_id);
+            //.......
         }
-        return $tag;
+        return true;
     }
 
     /*-------------------一道奇怪的分界线--没理由--就是为了分界！---------------------------------------*/
     /**
      * 微信配置 处理订单支付金额
      * @param $out_trade_no 支付的订单号
-     * @param int $postageTag 是否返回运费标记位
+     * TODO $all_order_amount 此为测试数值 可根据实际情况进行赋值
      * @return float|int|mixed
      */
-    public function wxPayOrder($out_trade_no,$postageTag = 0){
-        //TODO 获取对应订单的交易价
-        $batch_order_sn = M('order_info')
-            ->where('order_sn = '.$out_trade_no)
-            ->getField('batch_order_sn');
-        //商品(品鉴购)总价
-        $pjg_order_amount = 0;
-        $nk_order_amount = 0;
-        $other_order_amount = 0;
-        //订制包邮费
-        $act_freight = 0;
-        if ($batch_order_sn != null){
-            $arrOrder_sn = explode('|',$batch_order_sn);
-            //批量支付
-            foreach ($arrOrder_sn as $value){
-                $pjg_order_amount += $this->getOrderAmount($value,'PJG');
-                $nk_order_amount += $this->getOrderAmount($value,'NK');
-                $other_order_amount += $this->getOrderAmount($value);
-                //$act_freight += $this->getOrderFreight($value);
-            }
-        }else{
-            $pjg_order_amount += $this->getOrderAmount($out_trade_no,'PJG');
-            $nk_order_amount += $this->getOrderAmount($out_trade_no,'NK');
-            $other_order_amount += $this->getOrderAmount($out_trade_no);
-            //$act_freight += $this->getOrderFreight($out_trade_no);
-        }
-        //TODO 进行优惠券的使用效果加成
-        $other_order_amount = $this->getCouponEffect($out_trade_no,$other_order_amount);
-        $order_amount = $pjg_order_amount +$nk_order_amount + $other_order_amount;
-        //TODO 计算运费
-        $postage = $this->getOrderPostage($order_amount,$pjg_order_amount);
-        //$postage += $act_freight;
-        //TODO 如果运费标记位是 1，则返回运费
-        if($postageTag == 1){
-            return round($postage,2);
-        }else{
-            //订单总额
-            $all_order_amount = $order_amount + $postage;
-            return round($all_order_amount,2);
-        }
-
-    }
-
-    //TODO 根据订单号 获取运费
-    public function getOrderPostage($all_order_amount,$pjg_order_amount){
-        //如果单品总价小于100元 需要交纳运费
-        $postage = get_config('postage');
-        $mj = get_config('postage_mj');
-        if ($all_order_amount == 0 || $all_order_amount >= $mj || $pjg_order_amount > 1) {
-            //TODO 满减 ||品鉴购 免去运费
-            $postage = 0;
-        }
-        return $postage;
-    }
-
-    /**
-     * 获取订单运费 主要是订制包运费
-     */
-    public function getOrderFreight($value){
-        $order_freight = 0;
-        if ($value){
-            $order_freight = M('order_info')
-                ->where('order_sn = '.$value)
-                ->getField('order_freight');
-        }
-        return $order_freight;
-    }
-    /**
-     * 获取订单的支付总额
-     * @param $value 订单号
-     * @return mixed
-     */
-    public function getOrderAmount($value,$Tag = null)
-    {
-        $order_amount = 0;
-        if ($value){
-            $strWhere = "order_sn = '" . $value . "'";
-            //TODO　判断此商品是否为品鉴购活动
-            $res = M('order_info oi')
-                ->join('ms_order_goods og on og.order_id = oi.order_id')
-                ->join('ms_goods g on og.product_id = g.goods_id')
-                ->field('oi.order_amount,g.participation_activities pa')
-                ->where($strWhere)
-                ->find();
-            $PJG_tag = is_PJG_OrderSn($value);
-            $NK_tag = is_NK_OrderSn($value);
-            $PJG_discount = get_config('PJG_discount');
-            //TODO 获取品鉴购的单品总价
-            if ($Tag == 'PJG'){
-                if ($PJG_tag){
-                    $order_amount = sprintf("%.2f",($res['order_amount']*$PJG_discount));
-                }else{
-                    $order_amount = 0;
-                }
-            }elseif ($Tag == 'NK'){
-                if ($NK_tag){
-                    $order_amount = $res['order_amount'];
-                }else{
-                    $order_amount = 0;
-                }
-            } else{
-                if ($res){
-                    //如果是单品
-                    if ($PJG_tag||$NK_tag){
-                        $order_amount = 0;
-                    }else{
-                        $order_amount = $res['order_amount'];
-                    }
-                }else{
-                    //如果是订制包
-                    $order_amount = M('order_info')
-                        ->where($strWhere)
-                        ->getField('order_amount');
-                    $order_amount = $order_amount ? $order_amount : 0;
-
-                }
-            }
-        }
-        return $order_amount;
-    }
-
-    /**
-     * 获取优惠券绑定商品  对应订单的总价
-     * @param $value
-     * @param int $customMade
-     * @param int $couponToGoodsID
-     * @return mixed
-     */
-    public function getCouponGoodsOrderAmount($value,$couponToGoodsID,$customMade = 0)
-    {
-        $strWhere = "order_sn = '" . $value . "' and custom_made = ".$customMade
-            ." and og.product_id = ".$couponToGoodsID;
-        $order_amount = M('order_info oi')
-            ->join('ms_order_goods og on og.order_id = oi.order_id')
-            ->where($strWhere)
-            ->getField('oi.order_amount');
-        return $order_amount;
-    }
-    /**
-     * 根据选择的使用券 加成支付总额
-     * @param $order_sn 主订单编号
-     * @param $order_amount 待支付总额
-     * @return int
-     */
-    public function getCouponEffect($order_sn,$order_amount,$status = 1){
-        $strUserTime = '(c.validity_day * 86400 + uc.add_time) > '.time();
-        //TODO 我也不清楚怎么就不能用上一句了!!!
-        $strUserTime = 1;
-        $res = M('user_coupon uc')
-            ->join('ms_coupon c on c.c_id = uc.c_id')
-            ->join('ms_order_info oi on uc.id = oi.user_coupon_id')
-            ->field('c.type_id,c.discount,c.full_reduction,c.goods_id')
-            ->where("c.is_delete = 0 and uc.status = ".$status." and ".$strUserTime." and order_sn = ".$order_sn)
-            ->find();
-        $couponToGoodsID = $res['goods_id'];
-        if ($res){
-            if ($couponToGoodsID){
-                //TODO 如果该优惠券有对应的商品 只针对绑定商品进行优惠处理
-                $order_amount = $this->couponGoodsDealForOrder($order_sn,$order_amount,$couponToGoodsID,$res['discount']);
-            }else{
-                $couponType = $res['type_id'];
-                if ($couponType == 2){
-                    //此为折扣券
-                    $order_amount = $order_amount * floatval($res['discount'] * 0.1);
-                }else{
-                    //此为优惠券
-                    $fReduction = explode('-',$res['full_reduction']);
-                    $fullTag = $fReduction[0] ? $fReduction[0] : 10000;
-                    $reductionTag = $fReduction[1] ? $fReduction[1] : 0;
-                    if ($order_amount >= $fullTag){
-                        $order_amount -= $reductionTag;
-                    }
-                }
-            }
-        }else{
-            //TODO 判断没选择优惠券时的订单价格
-            $nk_discount = get_config('nk_discount');
-            $canUseNK = canUseNK_discount($order_sn);
-            if ($canUseNK){
-                $order_amount = $order_amount * floatval($nk_discount);
-            }
-        }
-        return $order_amount;
-    }
-
-    /**
-     * 处理优惠券绑定商品的 订单总价影响
-     * @param $out_trade_no
-     * @param $order_amount
-     * @param $couponToGoodsID
-     * @param $discount
-     */
-    public function couponGoodsDealForOrder($out_trade_no,$order_amount,$couponToGoodsID,$discount){
-        //TODO 获取对应订单的交易价
-        $batch_order_sn = M('order_info')
-            ->where('order_sn = '.$out_trade_no)
-            ->getField('batch_order_sn');
-
-        //受影响的订单总价
-        $couponGoods_for_order_amount = 0 ;
-        if ($batch_order_sn != null){
-            $arrOrder_sn = explode('|',$batch_order_sn);
-            //批量支付
-            foreach ($arrOrder_sn as $value){
-                $couponGoods_for_order_amount += $this->getCouponGoodsOrderAmount($value,$couponToGoodsID,0);
-            }
-        }else{
-            $couponGoods_for_order_amount += $this->getCouponGoodsOrderAmount($out_trade_no,$couponToGoodsID);
-        }
-        //计算节省去的总额
-        $discountToAmount = $couponGoods_for_order_amount * (1 - floatval($discount * 0.1));
-        return $order_amount - $discountToAmount;
+    public function wxPayOrder($out_trade_no){
+        //$out_trade_no 可用于真实业务的数据处理
+        $all_order_amount = 1;
+        return round($all_order_amount,2);
     }
 }

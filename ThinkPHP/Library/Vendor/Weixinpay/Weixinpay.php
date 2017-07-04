@@ -177,7 +177,7 @@ class Weixinpay {
             // 订单数据  请根据订单号out_trade_no 从数据库中查出实际的body、total_fee、out_trade_no、product_id
 
             $cartPayController = new \M\Controller\CartpayController();
-            $all_order_amount = $cartPayController->wxPayOrder($out_trade_no,0);
+            $all_order_amount = $cartPayController->wxPayOrder($out_trade_no);
 
             $total_fee = floatval($all_order_amount)*100;
             $order=array(

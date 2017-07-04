@@ -12,7 +12,8 @@ class WeixinController extends Controller
     {
         import('Org.Wechat.Weixin');
         //参数传值 token、AppID、AppSecert
-        $wechat = new \Weixin('zhenmi', 'wxd6ef998d1322fa89', 'ef8e5728ffe1c25f18d24f7708d066b7');
+        $wxConf = C('WEIXINPAY_CONFIG');
+        $wechat = new \Weixin($wxConf['TOKEN'],$wxConf['APPID'],$wxConf['APPSECRET']);
         if (!isset($_GET['echostr'])) {
             //TODO 调用响应消息函数 自动回复
             $wechat->responseMsg();

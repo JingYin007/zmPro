@@ -4,7 +4,7 @@ return array(
     'WEB_TITTLE'           =>   '木头部落',
     //'配置项'=>'配置值'
     'DEFAULT_MODULE'       =>   'M', //设置默认模块
-    'MODULE_ALLOW_LIST'    =>   array('Home','Admin','M'),// 设置允许访问的模块列表
+    'MODULE_ALLOW_LIST'    =>   array('Admin','M'),// 设置允许访问的模块列表
     'MODULE_DENY_LIST'     =>   array('Common','Runtime'),// 设置禁止访问的模块列表
     'URL_MODEL'            =>   2,      //URL模式
     'URL_CASE_INSENSITIVE' =>   true,//URL不区分大小写
@@ -41,11 +41,12 @@ return array(
     'SHOW_PAGE_TRACE'       =>false,   // 显示页面Trace信息
 
     'WEIXINPAY_CONFIG'  => array(
-        'APPID'              => 'wxdxxxxxxx89', // 微信支付APPID
+        'APPID'              => 'wxdxxxxxxx89', // 公众号APPID 微信支付APPID
         'MCHID'              => '1xxxxxxx2', // 微信支付MCHID 商户收款账号
         'KEY'                => 'MCxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxlW', // 微信支付KEY
         'APPSECRET'          => 'exxxxxxxxxxxxxxxxxxxxxxxxx7', // 公众帐号secert (公众号支付专用)
-        'NOTIFY_URL'         => 'http://xxxxxxxx/M/Cartpay/notify', // 接收支付状态的连接 118.190.117.44
+        'NOTIFY_URL'         => 'http://xxxxxxxx/M/Cartpay/notify', // 接收支付状态的连接
+        'TOKEN'             => 'zmxxx',
     ),
     //支付宝 支付配置
     'ALI_CONFIG'  => array(

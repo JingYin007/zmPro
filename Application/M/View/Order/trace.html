@@ -3,25 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-   <style>
-       .time{
-           color: #383b3c;
-           font-weight: bold;
-       }
-       .content{
-           color: #8b050a;
-           font-weight: bold;
-       }
-   </style>
+    <style>
+        td,th {
+            display: table-cell;
+            vertical-align: inherit;
+            border:1px dashed gray;
+        }
+        table {
+            border-collapse: collapse;
+            border-spacing: 0;
+            border:1px solid gray;
+        }
+        td {
+            padding: 7px;
+            color: #828282;
+        }
+        .time{
+            color: #383b3c;
+        }
+        .content{
+            color: #8b050a;
+        }
+        .tr_title{
+            height: 38px;
+        }
+    </style>
 </head>
 <body>
-<p></p>
-    <h3>快递公司：{$comName}</h3>
-    <volist name="trace" id = "v">
-        <span class="time">{$v.time}</span>
-        <span class="content">{$v.context}</span>
-        <br/>
-        <hr/>
-    </volist>
+<div class="cpxqzsk">
+    <div class="wlxqzs">
+        <table>
+            <tr class="tr_title">
+                <th colspan="2">
+                    <span class="title">物流详情：{$comName}</span>
+                </th>
+            </tr>
+            <volist name="trace" id = "v">
+                <tr>
+                    <td><span class="time">{$v.time}</span></td>
+                    <td><span class="content">{$v.context}</span></td>
+                </tr>
+            </volist>
+        </table>
+    </div>
+</div>
 </body>
 </html>

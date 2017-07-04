@@ -199,48 +199,6 @@ function objectToArray($e){
     return $e;
 }
 
-//搜索文字变红
-function keyword($s,$e){
-
-    $linkDefs = array(
-        "$e,111.htm",
-    );
-    // var_dump($linkDefs);
-    $linkMap = array();
-    foreach($linkDefs as $row) {
-        $linkMap[] = explode(',', $row);
-    }
-
-    $str = $s;
-
-    //把原有的链接替换成文字
-    foreach($linkMap as $row) {
-        $str = preg_replace('/(<a.*?>\s*)('.$row[0].')(\s*<\/a>)/sui', '${2}', $str);
-    }
-
-    $tmpKwds = array(); //存放暂时被替换的子关键字
-
-    foreach($linkMap as $i=>$row) {
-        list($kwd, $url) = $row;
-        for($j=$i+1; $j<count($linkMap); $j++) {
-            $subKwd = $linkMap[$j][0];
-            //如果包含其他关键字，暂时替换成其他字符串，如 茶叶 变成 {fcc734148321f5ad627b27585aa23958}
-            if(strpos($kwd, $subKwd) !== false) {
-                $tmpKwd = '{'.md5($subKwd).'}';
-                $kwd = str_replace($subKwd, $tmpKwd, $kwd);
-                $tmpKwds[$tmpKwd] = $subKwd;
-            }
-        }
-        //把文字替换成链接
-        $str = preg_replace('/('.$row[0].')/sui', '<span style="color:#F00;display:inline;">'.$kwd.'</span>', $str, 1); // 最多替换5次
-    }
-
-    //把代替子关键字的字符串替换回来
-    foreach($tmpKwds as $tmp=>$kwd) {
-        $str = str_replace($tmp, $kwd, $str);
-    }
-    return $str;
-}
 //FTP上传文件函数
 function ftp_upload($remotefile,$localfile){
     $ftp = new \Think\Ftp();
@@ -370,19 +328,10 @@ function code($url,$user_id,$recommend){
         //ImageTTFText($im, 20, 0, 10, 20, $white, "/somewhere/arial.ttf", "I am NUMBER ONE !!");
         imagettftext($imt,14,0,ceil(($QRs_width - $fontBox[2]) / 2),90,$colors,$fontfile,$strs);
         $usershare = $path.$user_name.'share.png';
-
         imagepng($imt,$usershare);
-
-
-
-
     }
     $furlts=C('REMOTE_ROOT').$usershare;
     ftp_upload($furlts,$usershare);
-
-
-
-
 }
 //图片下载用
 function getSslPage($url) {
@@ -453,7 +402,7 @@ function ftp_image_upload_desc($str){
     // p($match);die;
     foreach ($match[3] as $k => $v) {
         $tempu=parse_url($v);
-        $v=$tempu['path']; 
+        $v=$tempu['path'];
         $localfile  = $local_root.$v;
         $remotefile = $remote_root.$v;
         $remotefile = substr($remotefile,1);
@@ -461,138 +410,6 @@ function ftp_image_upload_desc($str){
     }
     $retStr = str_replace("src=\"/Public", "src=\"$host/Public", $str);
     return $retStr;
-}
-
-/**
- * 验证ID是否有效
- * @param string/array $data 数据库名/数组
- * @param int          $id   查询的ID
- * @param string       $c_id 数据库中字段名
- * @return mixed/bool        查询的ID/bool
- */
-function checkId($id, $data='', $c_id = 'id'){
-    //判断ID是否存在
-    if($id){
-        if(!is_array($data)){
-            $Ids = M($data)->field($c_id)->select();
-            $arr = array();
-            foreach ($Ids as $key => $value){
-                $arr[] = $value[$c_id];
-            }
-        } else {
-            $arr = $data;
-        }
-        if(!in_array($id, $arr)){
-            return false;
-        }
-        return $id;
-    } else {
-        return false;
-    }
-}
-
-//资讯关键字可点击
-function keyword_a($s,$e,$n,$u){
-
-    $linkDefs = array(
-        "$e,$u",
-    );
-    // var_dump($linkDefs);
-    $linkMap = array();
-    foreach($linkDefs as $row) {
-        $linkMap[] = explode(',', $row);
-    }
-
-    $str = $s;
-
-    //把原有的链接替换成文字
-    foreach($linkMap as $row) {
-        $str = preg_replace('/(<a.*?>\s*)('.$row[0].')(\s*<\/a>)/sui', '${2}', $str);
-    }
-
-    $tmpKwds = array(); //存放暂时被替换的子关键字
-
-    foreach($linkMap as $i=>$row) {
-        list($kwd, $url) = $row;
-        for($j=$i+1; $j<count($linkMap); $j++) {
-            $subKwd = $linkMap[$j][0];
-            //如果包含其他关键字，暂时替换成其他字符串，如 茶叶 变成 {fcc734148321f5ad627b27585aa23958}
-            if(strpos($kwd, $subKwd) !== false) {
-                $tmpKwd = '{'.md5($subKwd).'}';
-                $kwd = str_replace($subKwd, $tmpKwd, $kwd);
-                $tmpKwds[$tmpKwd] = $subKwd;
-            }
-        }
-        //把文字替换成链接
-        $str = preg_replace('/('.$row[0].')/sui', '<a href="'.$row[1].'">'.$kwd.'</a>', $str, $n); // 最多替换5次
-    }
-
-    //把代替子关键字的字符串替换回来
-    foreach($tmpKwds as $tmp=>$kwd) {
-        $str = str_replace($tmp, $kwd, $str);
-    }
-    return $str;
-}
-
-//发送消息公共方法
-/*
-$title 消息标题
-$content 消息内容
-$status 0为私人消息 1为公告消息
-$uid 消息接收人
-$hid 消息发送人
-$card 如果有卡券 这个是卡券ms_coupon表里的c_id
-*/
-function public_news($title,$content,$status,$uid,$hid,$card){
-
-    $date['title'] = $title;
-    $date['status'] = $status;
-    $date['content'] = $content;
-    $date['hid'] = $hid;
-    $date['add_time'] = time();
-    if($card!=""){
-        $date['cid'] = $card;
-    } if($status==""){
-        $date['status'] = 0;
-    } if($hid==""){
-        $date['hid'] = $_SESSION['uid'];
-    } if($uid=="" || $uid==0){
-        $date['status'] = 1;
-    }
-
-    if($date['status']==0){
-        $date['uid'] = $uid;
-        $news = M('news')->add($date);
-    }else{
-        $date['uid'] = 0;
-        $news = M('news')->add($date);
-    }
-
-    return $news;
-
-}
-function get_ad_img($ap_id){
-    $ad_img = M('advertising_position ap')
-        ->field('a.img_url,a.url')
-        ->join('ms_advertising a on a.id = ap.advertising_id')
-        ->where('ap.id = '.$ap_id)
-        ->find();
-    return $ad_img;
-}
-
-
-//用户行为方法
-function user_ber($id){
-    if($_SESSION['website']!==$_SERVER["REQUEST_URI"]){
-        if(!IS_AJAX){
-            $date['uid'] = $id;
-            $date['website'] = $_SERVER["REQUEST_URI"];
-            $_SESSION['website'] = $date['website'];
-            $date['user_ip'] = $_SERVER["REMOTE_ADDR"];
-            $date['add_time'] = time();
-            M('user_behavior')->add($date);
-        }
-    }
 }
 /**
  * 使用curl获取远程数据
@@ -630,351 +447,6 @@ function get_config($tag){
         ->getField('value');
     return $img;
 }
-/**
- * 用户晋升等级
- * @param $userID 需要升级的用户
- * @param $rank 要达到的等级
- * @return bool
- */
-function up_user_rank($userID,$rank){
-    $saveData = array(
-        'rank' => $rank
-    );
-    $res = M('users')
-        ->where('user_id = '.$userID.' and rank < '.$rank)
-        ->save($saveData);
-    return $res;
-}
-
-/**
- * 向用户推送消息 “我的-消息”
- * @param $tag
- * @param $user_id
- */
-function push_tip_msg($tag,$user_id){
-    $res = M('tip_msg')
-        ->field('title,content')
-        ->where("is_delete = 0 and tag = '".$tag."'")
-        ->find();
-    $title = $res['title'];
-    $content = $res['content'];
-    $hid = 1;//消息发送人 后台管理员admin_user表user_id
-    public_news($title,$content,0,$user_id,$hid);
-}
-
-/**
- * 获取用户的头像
- * @param $user_id 登录用户的ID
- * @return mixed
- */
-function get_user_img($user_id){
-    $img = M('users')
-        ->where('user_id = '.$user_id)
-        ->getField('user_img');
-    $str=strstr($img,'wx.qlogo.cn');
-    if ($img){
-        if(!$str){
-            $img=C('FTP_SEVER').DIRECTORY_SEPARATOR.$img;
-        }
-    }else{
-        $img = C('FTP_SEVER').'/Public/M/images/stlogo.jpg';
-    }
-    return $img;
-}
-
-/**
- * @param $goods_id
- * @return int
- */
-function getSellGoodsCount($goods_id){
-    $count = M('goods g')
-        ->join('ms_order_goods og on og.product_id = g.goods_id')
-        ->join('ms_order_info oi on oi.order_id = og.order_id')
-        ->where('oi.pay_status = 1 and g.goods_id = '.$goods_id)
-        ->getField('sum(og.product_number)');
-    return intval($count);
-}
-
-function getUserBuyTheGoodsCount($goods_id,$user_id){
-    $count = M('goods g')
-        ->join('ms_order_goods og on og.product_id = g.goods_id')
-        ->join('ms_order_info oi on oi.order_id = og.order_id')
-        ->where('oi.pay_status = 1 and g.goods_id = '.$goods_id.' and oi.user_id = '.$user_id)
-        ->getField('sum(og.product_number)');
-    return intval($count);
-}
-
-/**
- * 判断此商品是否为品鉴购活动商品
- * @param $goods_id
- * @return bool
- */
-function is_PJG($goods_id){
-    $res = M('goods')
-        ->where('goods_id = '.$goods_id)
-        ->getField('participation_activities pa');
-    $partActRes = unserialize($res);
-    $tag = $partActRes[3]['status'];
-    if ($tag == '1'){
-        return true;
-    }else{
-        return false;
-    }
-}
-function is_PJG_OrderSn($order_sn){
-    $goods_id = M('order_info oi')
-        ->join('ms_order_goods og on og.order_id = oi.order_id')
-        ->where('oi.order_sn = '.$order_sn)
-        ->getField('og.product_id');
-    $tag = is_PJG($goods_id);
-    return $tag;
-}
-
-/**
- * 判断此商品是否为年卡
- * @param $goods_id
- * @return bool
- */
-function is_NK($goods_id){
-    $res = M('goods')
-        ->where('goods_id = '.$goods_id)
-        ->getField('participation_activities pa');
-    $partActRes = unserialize($res);
-    $tag = $partActRes[4]['status'];
-    if ($tag == '1'){
-        return true;
-    }else{
-        return false;
-    }
-}
-/**
- * 判断此商品是否为年卡
- * @param $order_sn
- * @return bool
- */
-function is_NK_OrderSn($order_sn){
-    $goods_id = M('order_info oi')
-        ->join('ms_order_goods og on og.order_id = oi.order_id')
-        ->where('oi.order_sn = '.$order_sn)
-        ->getField('og.product_id');
-    $tag = is_NK($goods_id);
-    return $tag;
-}
-
-//每有三个下级购买时 上级获得一张年卡
-//$user_id 当前登录用户的user_id
-//$goods_id 购买的年卡商品id
-function give_card_CQ($user_id,$goods_id){
-    if(is_NK($goods_id)){
-        $parent_id = M('users')->where("user_id = $user_id")->getfield('parent_id');//上级的id
-        if($parent_id){
-            $list = M('users')->field('o.order_id,o.pay_time,ms_users.user_id')
-                ->join('ms_users as u on u.user_id = ms_users.parent_id')
-                ->join('ms_order_info as o on o.user_id = ms_users.user_id')
-                ->join('ms_order_goods as og on og.order_id = o.order_id')
-                ->where("o.pay_time!=0 and o.pay_status = 1 and ms_users.parent_id = $parent_id and og.product_id = $goods_id")
-                ->group('o.user_id')
-                ->select();//查询下级有多少人购买
-
-            $pay_status = M('order_info')->field('pay_status,pay_time,og.order_id')
-                ->join("ms_order_goods as og on ms_order_info.order_id = og.order_id")
-                ->where("pay_time!=0 and pay_status = 1 and user_id = $parent_id and og.product_id = $goods_id")
-                ->find();//查询上级是否购买和最初购买时间
-
-            if($pay_status['pay_status']){
-                foreach ($list as $key => $value) {//过滤掉下级在上级之前购买的用户
-                    if($pay_status['pay_time'] < $value['pay_time']){
-                        $s+=1;
-                    }
-                }
-
-                if($s%3 == 0 && $s!== null && $s!== 0){
-                    $pay_sta = M('order_info')->field('pay_status,pay_time,og.order_id')
-                        ->join("ms_order_goods as og on ms_order_info.order_id = og.order_id")
-                        ->where("pay_time!=0 and pay_status = 1 and user_id = $parent_id and og.product_id = $goods_id")
-                        ->order('og.order_id desc')
-                        ->find();//查询上级的最后订单的购买时间
-
-                    //如果为3的倍数 就给上级加一年的年卡
-                    $pay_sta['pay_time'] += 31536000;
-                    givingNK($goods_id,$pay_sta['pay_time'],$parent_id);
-                }
-            }
-        }
-    }
-}
-
-/**
- * 每有三个下级购买时 上级获得一张年卡
- * @param $user_id 当前登录用户的user_id
- * @param $goods_id 购买的年卡商品id
- */
-function give_card($user_id,$goods_id){
-    if(is_NK($goods_id)){
-        $parent_id = M('users')->where("user_id = $user_id")->getfield('parent_id');//上级的id
-        if($parent_id){
-            $pay_status = M('order_info')->field('pay_status,pay_time,og.order_id')
-                ->join("ms_order_goods as og on ms_order_info.order_id = og.order_id")
-                ->where("pay_time!=0 and pay_status = 1 and user_id = $parent_id and og.product_id = $goods_id")
-                ->find();//查询上级是否购买和最初购买时间
-
-            if($pay_status['pay_status']){
-                $list = M('users')->field('o.order_id,o.pay_time,ms_users.user_id')
-                    ->join('ms_users as u on u.user_id = ms_users.parent_id')
-                    ->join('ms_order_info as o on o.user_id = ms_users.user_id')
-                    ->join('ms_order_goods as og on og.order_id = o.order_id')
-                    ->where("o.pay_time!=0 and o.pay_time > ".$pay_status['pay_time']
-                        ." and o.pay_status = 1 and ms_users.parent_id = $parent_id and og.product_id = $goods_id")
-                    ->group('o.user_id')
-                    ->select();//查询下级有多少人购买
-                $s = 0;
-                foreach ($list as $key => $value) {//过滤掉下级在上级之前购买的用户
-                    if($pay_status['pay_time'] < $value['pay_time']){
-                        $s+=1;
-                    }
-                }
-                if($s%3 == 0 && $s!== null && $s!== 0){
-                    $pay_sta = M('order_info')->field('pay_status,pay_time,og.order_id')
-                        ->join("ms_order_goods as og on ms_order_info.order_id = og.order_id")
-                        ->where("pay_time!=0 and pay_status = 1 and user_id = $parent_id and og.product_id = $goods_id")
-                        ->order('og.order_id desc')
-                        ->find();//查询上级的最后订单的购买时间
-                    //如果为3的倍数 就给上级加一年的年卡
-                    $pay_sta['pay_time'] += 31536000;
-                    givingNK($goods_id,$pay_sta['pay_time'],$parent_id);
-                }
-            }
-        }
-    }
-}
-
-/**
- * 针对赠送的一张年卡订单下发
- * @param $goods_id 年卡 ID
- * @param $pay_time 支付时间参数
- * @param $user_id 所赠用户 ID
- * @return bool true:赠送成功  false:赠送失败
- */
-function givingNK($goods_id,$pay_time,$user_id){
-    $orderController = new \M\Controller\OrderController();
-    $tag = $orderController->givingNKOrderInfo($goods_id,$pay_time,$user_id);
-    //TODO 提示消息 赠送一张年卡
-    push_tip_msg('giveNK',$user_id);
-    return $tag;
-}
-/**
- * 判断该用户是否享受 年卡所提供的优惠折扣
- * @param $order_sn
- * @return bool
- */
-function canUseNK_discount($order_sn){
-    //查询其支付的所有订单 时间倒叙
-    //判断其是否买过年卡商品
-    $user_id = M('order_info')
-        ->where('order_sn = '.$order_sn)
-        ->getField('user_id');
-    $user_id = $user_id ? $user_id : 0;
-    $tagTime = time() - (365 * 24 * 60 * 60);
-    $res = M('order_info')
-        ->where("pay_status = 1 and order_type = 'NK' and user_id = ".$user_id
-            ." and pay_time > ".$tagTime)
-        ->select();
-    if ($res){
-        return true;
-    }else{
-        return false;
-    }
-}
-function get_goods_id_by_orderSn($order_sn){
-    $goods_id = M('order_info oi')
-        ->join('ms_order_goods og on og.order_id = oi.order_id')
-        ->where('oi.order_sn = '.$order_sn)
-        ->getField('og.product_id');
-    $goods_id = $goods_id ? $goods_id :0;
-    return $goods_id;
-}
-
-/**
- * 判断是否在支付页面显示 “我的优惠券”
- * @param $order_sn 主订单号
- * @return string
- */
-function toShowCouponsTag($order_sn){
-    $showTag = 'block';
-    $batch_order_sn = M('order_info')
-        ->where('order_sn = '.$order_sn)
-        ->getField('batch_order_sn');
-
-    if ($batch_order_sn != null){
-        $showTag = 'none';
-        $arrOrder_sn = explode('|',$batch_order_sn);
-        $tag = noPJGNK($arrOrder_sn);
-        if ($tag){
-            $showTag = 'block';
-        }
-    }else{
-        $nk_Tag = is_NK_OrderSn($order_sn);
-        $pjg_Tag = is_PJG_OrderSn($order_sn);
-        if ($nk_Tag || $pjg_Tag){
-            $showTag = 'none';
-        }
-    }
-    return $showTag;
-}
-
-/**
- * 判断批量订单
- * 既不是年卡，也不是品鉴购
- * @param $arrOrder_sn
- * @return int
- */
-function noPJGNK($arrOrder_sn){
-    //既不是年卡，也不是品鉴购
-    $tag = 0;
-    foreach ($arrOrder_sn as $value){
-        if ($value){
-            $pjg_Tag = is_PJG_OrderSn($value);
-            $nk_Tag = is_NK_OrderSn($value);
-            if ($pjg_Tag){
-                continue;
-            }else{
-                if (!$nk_Tag){
-                    $tag = 1;
-                    break;
-                }
-            }
-        }
-    }
-    return $tag;
-}
-
-//查询商品名
-function goods_name($id){
-    if($id){
-        $name = M('goods')->where("goods_id = $id")->getfield('name');
-        if(!$name){
-            return '该商品不存在，请核对数据库';
-        }else{
-            return '【详情页】'.$name;
-        }
-    }else{
-         return '该商品不存在，请核对数据库';
-    }
-}
-
-//查询资讯标题
-function found_title($id){
-    if($id){
-        $name = M('article')->where("id = $id")->getfield('title');
-        if(!$name){
-            return '资讯不存在，请核对数据库';
-        }else{
-            return '【资讯页】'.$name;
-        }
-    }else{
-         return '资讯不存在，请核对数据库';
-    }
-}
 
 function haveSessionUserID(){
     if (is_mobile() && !is_weixin()){
@@ -991,14 +463,14 @@ function haveSessionUserID(){
 }
 
 function send_verify($mobile){
-	$arr = range(0,9);
-	$rand_keys = array_rand($arr,6);
-	shuffle($rand_keys);
-	$rand = implode('',$rand_keys);
-	if(cookie('code')){
-		cookie('code',null);
-	}
-	cookie('code',md5($rand.'fetow'),time()+6000,"/");
+    $arr = range(0,9);
+    $rand_keys = array_rand($arr,6);
+    shuffle($rand_keys);
+    $rand = implode('',$rand_keys);
+    if(cookie('code')){
+        cookie('code',null);
+    }
+    cookie('code',md5($rand.'fetow'),time()+6000,"/");
     $appkey = "23496841";
     $secret = "618776c025b93bb2f86e66a2b04eb294";
     vendor('Alimsg.top.TopClient');
@@ -1018,7 +490,7 @@ function send_verify($mobile){
     $req->setSmsParam("{code:'".$rand."'}");
     $req->setRecNum($mobile);
     $resp = $c->execute($req);
-	return 1;
+    return 1;
 }
 /**
  * 微信扫码支付

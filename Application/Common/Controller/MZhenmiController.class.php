@@ -14,7 +14,6 @@ class MZhenmiController extends Controller  {
     public function _initialize(){
         $this->dealForSever();
     }
-
     /**
      * 判断是否为线上服务 处理配置数据
      */
@@ -54,7 +53,8 @@ class MZhenmiController extends Controller  {
      */
     public function getWxShare(){
         import('Org.Wechat.Weixin');
-        $wechat=new \Weixin('xxxx','wxxxxxxxxxxxxxxx9','exxxxxxxxxxxxxxxxx7');
+        $wxConf = C('WEIXINPAY_CONFIG');
+        $wechat=new \Weixin($wxConf['TOKEN'],$wxConf['APPID'],$wxConf['APPSECRET']);
         $url = "http://www.52zhenmi.com".$_SERVER['REQUEST_URI'];
         $res = $wechat->getJsSign($url);
         $res['wxurl'] = $url;
@@ -70,7 +70,8 @@ class MZhenmiController extends Controller  {
             //获取分享的链接写入数据库(我的分享)
             if (is_weixin()) {
                 import('Org.Wechat.Weixin');
-                $wechat = new \Weixin('xxxxxx', 'wxxxxxxxxxxxxx9', 'exxxxxxxxxxxxxxxxxxb7');
+                $wxConf = C('WEIXINPAY_CONFIG');
+                $wechat = new \Weixin($wxConf['TOKEN'],$wxConf['APPID'],$wxConf['APPSECRET']);
                 $url = "http://www.52zhenmi.com" . $_SERVER['REQUEST_URI'];
                 if (!S(session('m_name') . '_ZMid')) {
                     if (!$_GET['code']) {

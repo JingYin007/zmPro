@@ -1,35 +1,33 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<?php if (!defined('THINK_PATH')) exit();?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
     <meta name="format-detection" content="telephone=no">
-    <link href="__MCSS__/admin.css" rel="stylesheet" type="text/css" />
-    <link href="__MCSS__/upzhang.css" rel="stylesheet" type="text/css" />
-    <script type="text/javascript" src="__MJS__/jquery-1.8.0.min.js"></script>
-    <script type="text/javascript" src="__MJS__/order.js"></script>
-    <script type="text/javascript" src="__MJS__/pay.js"></script>
-    <script type="text/javascript" src="__MJS__/jquery.SuperSlide.2.1.1.js"></script>
-    <script type="text/javascript" src="__MJS__/dialog/layer.js"></script>
-    <script type="text/javascript" src="__MJS__/dialog.js"></script>
+    <link href="http://localhost/zmPro/Public/M/css/admin.css" rel="stylesheet" type="text/css" />
+    <link href="http://localhost/zmPro/Public/M/css/upzhang.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="http://localhost/zmPro/Public/M/js/jquery-1.8.0.min.js"></script>
+    <script type="text/javascript" src="http://localhost/zmPro/Public/M/js/order.js"></script>
+    <script type="text/javascript" src="http://localhost/zmPro/Public/M/js/pay.js"></script>
+    <script type="text/javascript" src="http://localhost/zmPro/Public/M/js/jquery.SuperSlide.2.1.1.js"></script>
+    <script type="text/javascript" src="http://localhost/zmPro/Public/M/js/dialog/layer.js"></script>
+    <script type="text/javascript" src="http://localhost/zmPro/Public/M/js/dialog.js"></script>
     <title>支付</title>
 </head>
 <body>
-<!--<a href="{:U('Order/indexx')}">参考</a>-->
+<!--<a href="<?php echo U('Order/indexx');?>">参考</a>-->
 <div class="cpxqzsk">
     <div class="shdzxs">
         <a onclick="toAddress()">
-            <div class="shdzxq" userAddr="{$userAddr0.consignee}">
-                <b class="consignee">{$userAddr0.consignee}&nbsp;{$userAddr0.mobile}</b>
-                <p class="address">{$userAddr0.address_name}&nbsp;{$userAddr0.address}</p>
-                <span class="delivery_note">{$userAddr0.delivery_note}</span>
+            <div class="shdzxq" userAddr="<?php echo ($userAddr0["consignee"]); ?>">
+                <b class="consignee"><?php echo ($userAddr0["consignee"]); ?>&nbsp;<?php echo ($userAddr0["mobile"]); ?></b>
+                <p class="address"><?php echo ($userAddr0["address_name"]); ?>&nbsp;<?php echo ($userAddr0["address"]); ?></p>
+                <span class="delivery_note"><?php echo ($userAddr0["delivery_note"]); ?></span>
                 <?php
-                    if(!$userAddr0){
-                    ?>
+ if(!$userAddr0){ ?>
                 <p class="tipAddUserAddrView">请点击此处添加收货地址</p>
                 <?php
-                    }
-                ?>
+ } ?>
             </div>
             <a onclick="toAddress()">
                 <div class="xgdzxq">＞</div>
@@ -38,38 +36,36 @@
     </div>
     <div id="div-payment">
         <div class="dfkcp xbzfbkj">
-            <volist name="waitingPayOrder" id="wo">
-                <div class="dfkxplb waitingPo div-order-{$wo.order_sn}"
-                     order_sn="{$wo.order_sn}" price="{$wo.price}" rprice="{$wo.rprice}">
-                    <div class="dzxzan" onclick="btnSel('{$wo.order_sn}')">
+            <?php if(is_array($waitingPayOrder)): $i = 0; $__LIST__ = $waitingPayOrder;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$wo): $mod = ($i % 2 );++$i;?><div class="dfkxplb waitingPo div-order-<?php echo ($wo["order_sn"]); ?>"
+                     order_sn="<?php echo ($wo["order_sn"]); ?>" price="<?php echo ($wo["price"]); ?>" rprice="<?php echo ($wo["rprice"]); ?>">
+                    <div class="dzxzan" onclick="btnSel('<?php echo ($wo["order_sn"]); ?>')">
                         <button type="button">◉</button>
                     </div>
                     <div class="dzxcpt">
-                        <img src="{$Think.config.FTP_SEVER}/{$wo.thumbnail}" /></div>
+                        <img src="<?php echo (C("FTP_SEVER")); ?>/<?php echo ($wo["thumbnail"]); ?>" /></div>
                     <div class="dzxcpm">
                         <p>
-                            <a href="###">{$wo.product_name}</a>
+                            <a href="###"><?php echo ($wo["product_name"]); ?></a>
                         </p>
                         <div class="dzxcsl">
 
                             <input name="" type="button" class="dzxczj"
-                                   id="delNum-{$wo.order_sn}"
-                                   onclick="changeOrderNum('{$wo.order_sn}','del','{$wo.product_id}')" value="-"/>
+                                   id="delNum-<?php echo ($wo["order_sn"]); ?>"
+                                   onclick="changeOrderNum('<?php echo ($wo["order_sn"]); ?>','del','<?php echo ($wo["product_id"]); ?>')" value="-"/>
                             <input name="" type="text" class="dzxcsjs viewNum"
-                                   id="viewNum-{$wo.order_sn}" value="{$wo.product_number}"/>
+                                   id="viewNum-<?php echo ($wo["order_sn"]); ?>" value="<?php echo ($wo["product_number"]); ?>"/>
                             <input name="" type="button" class="dzxczj"
-                                   id="addNum-{$wo.order_sn}"
-                                   onclick="changeOrderNum('{$wo.order_sn}','add','{$wo.product_id}')" value="+"/>
+                                   id="addNum-<?php echo ($wo["order_sn"]); ?>"
+                                   onclick="changeOrderNum('<?php echo ($wo["order_sn"]); ?>','add','<?php echo ($wo["product_id"]); ?>')" value="+"/>
                         </div>
                     </div>
                     <div class="dzxcjg">
-                        <p>￥{$wo.rprice}</p>
-                        <span class="spanDel" onclick="delOrderInfo('{$wo.order_sn}')">
+                        <p>￥<?php echo ($wo["rprice"]); ?></p>
+                        <span class="spanDel" onclick="delOrderInfo('<?php echo ($wo["order_sn"]); ?>')">
                             <a href="###">×</a>
                     </span>
                     </div>
-                </div>
-            </volist>
+                </div><?php endforeach; endif; else: echo "" ;endif; ?>
 
             <div class="qxscan">
                 <div class="batch">
@@ -84,23 +80,21 @@
                 </div>
             </div>
         </div>
-        <div class="yfxsnr">邮费：￥<label class="postage">{$postage}</label>元<span>{$postage_tip}</span></div>
+        <div class="yfxsnr">邮费：￥<label class="postage"><?php echo ($postage); ?></label>元<span><?php echo ($postage_tip); ?></span></div>
         <div class="yhkxzjs">
-            <volist name="useCoupons" id="use">
-                <span class="sel" id="uc-{$use.c_id}" attr-c_id="{$use.c_id}" onclick="selUc('{$use.c_id}')">
-                    {$use.discount}折卡X<label class="sum_{$use.c_id}">{$use.sum}</label></span>
-            </volist>
+            <?php if(is_array($useCoupons)): $i = 0; $__LIST__ = $useCoupons;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$use): $mod = ($i % 2 );++$i;?><span class="sel" id="uc-<?php echo ($use["c_id"]); ?>" attr-c_id="<?php echo ($use["c_id"]); ?>" onclick="selUc('<?php echo ($use["c_id"]); ?>')">
+                    <?php echo ($use["discount"]); ?>折卡X<label class="sum_<?php echo ($use["c_id"]); ?>"><?php echo ($use["sum"]); ?></label></span><?php endforeach; endif; else: echo "" ;endif; ?>
             <p class="xkjgysgb ">￥<label class="wx_allPrice">0.00</label></p>
         </div>
         <div class="hdzkfs zfymhdk">获得折扣卡办法<b>></b></div>
         <div class="hdzkwzjs zfymhdkjs">
-            {$coupon_rule}
+            <?php echo ($coupon_rule); ?>
         </div>
         <div class="zjyjrzs">
             <div class="yhtxzs">
-                <img src="{$user_img}" />
+                <img src="<?php echo ($user_img); ?>" />
             </div>
-            <div class="yhzfyzs">{$ad_word}</div>
+            <div class="yhzfyzs"><?php echo ($ad_word); ?></div>
         </div>
         <div class="msfkjzan">
             <input name="" onclick="orderPayment()" type="button" value="支付订单" />
@@ -108,20 +102,18 @@
     </div>
     <div id="div-address" style="display: none">
     <div id="div-address-view">
-        <volist name="userAddr" id="addr">
-            <div class="bjdzxq" status="{$addr.status}"
-                 id="div-addr-{$addr.address_id}" >
-                <div class="bjgrdz" onclick="btnAddrSel('{$addr.address_id}')">
+        <?php if(is_array($userAddr)): $i = 0; $__LIST__ = $userAddr;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$addr): $mod = ($i % 2 );++$i;?><div class="bjdzxq" status="<?php echo ($addr["status"]); ?>"
+                 id="div-addr-<?php echo ($addr["address_id"]); ?>" >
+                <div class="bjgrdz" onclick="btnAddrSel('<?php echo ($addr["address_id"]); ?>')">
                     <button type="button">◉</button>
                 </div>
                 <ul class="bjxqdz">
-                    <li>{$addr.consignee}&nbsp;{$addr.mobile}
-                        <span><a onclick="delUserAddr('{$addr.address_id}')">删除</a></span>
+                    <li><?php echo ($addr["consignee"]); ?>&nbsp;<?php echo ($addr["mobile"]); ?>
+                        <span><a onclick="delUserAddr('<?php echo ($addr["address_id"]); ?>')">删除</a></span>
                     </li>
-                    <li>{$addr.address_name}&nbsp;{$addr.address}</li>
+                    <li><?php echo ($addr["address_name"]); ?>&nbsp;<?php echo ($addr["address"]); ?></li>
                 </ul>
-            </div>
-        </volist>
+            </div><?php endforeach; endif; else: echo "" ;endif; ?>
     </div>
     <div class="xzyhdz">
         <input name="" type="button" value="+新增地址" onclick="upAddNewMsg()" />
@@ -139,9 +131,7 @@
             <br/><br/>
             <label>备注：</label>
             <select name="delivery">
-                <volist name="delivery" id="d">
-                    <option value="{$d.id}">{$d.delivery_note}</option>
-                </volist>
+                <?php if(is_array($delivery)): $i = 0; $__LIST__ = $delivery;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$d): $mod = ($i % 2 );++$i;?><option value="<?php echo ($d["id"]); ?>"><?php echo ($d["delivery_note"]); ?></option><?php endforeach; endif; else: echo "" ;endif; ?>
             </select>
             <br/><br/>
             <input type="button" value="添加" onclick="addNewMsg()" class="qrtjdz"/>
@@ -151,8 +141,8 @@
 </div>
 </div>
 
-<!--<form action="{:U('Cartpay/pay')}" method="get" id="form-toWxPayOrder">
-       <input name="out_trade_no" id="out_trade_no" value="{$order_sn}" type="hidden" />
+<!--<form action="<?php echo U('Cartpay/pay');?>" method="get" id="form-toWxPayOrder">
+       <input name="out_trade_no" id="out_trade_no" value="<?php echo ($order_sn); ?>" type="hidden" />
    </form>-->
 <form action="http://www.52zhenmi.com/M/Cartpay/pay" method="get" id="form-toWxPayOrder">
     <input name="out_trade_no" id="out_trade_no" value="" type="hidden" />
@@ -199,7 +189,7 @@
     addrLoadInitView();
 
     function selUc(c_id) {
-        var toUrl = "{:U('Order/ajaxSetUseCoupon')}";
+        var toUrl = "<?php echo U('Order/ajaxSetUseCoupon');?>";
         var strOrder_sn = $("#str_order_sn").val();
         var order_sn = $("#order_sn").val(); //字符分割
 
@@ -259,7 +249,7 @@
         })
     }
     function getAllPrice(order_sn) {
-        var toUrl = "{:U('Order/ajaxGetAllPrice')}";
+        var toUrl = "<?php echo U('Order/ajaxGetAllPrice');?>";
         $.post(
                 toUrl,
                 {'order_sn' : order_sn,},
@@ -271,44 +261,44 @@
     //待付款订单 商品数量增加或减少
     function changeOrderNum(order_sn,tag,product_id) {
         var viewNum = $(".dzxcsl #viewNum-" + order_sn);
-        var toUrl = "{:U('Order/ajaxChangeOrderNum')}";
-        var checkUrl = "{:U('Order/ajaxCheckGoodsNum')}";
+        var toUrl = "<?php echo U('Order/ajaxChangeOrderNum');?>";
+        var checkUrl = "<?php echo U('Order/ajaxCheckGoodsNum');?>";
         toChangeOrderNum(order_sn,tag,viewNum,toUrl,checkUrl,product_id);
     }
     //删除订单
     function delOrderInfo(order_sn) {
-        var toUrl = "{:U('Order/ajaxDelOrder')}";
+        var toUrl = "<?php echo U('Order/ajaxDelOrder');?>";
         toDelOrderInfo(toUrl,order_sn);
     }
     //已支付订单 批量删除
     function delBatch() {
-        var toUrl = "{:U('Order/ajaxDelBatchOrder')}";
+        var toUrl = "<?php echo U('Order/ajaxDelBatchOrder');?>";
         toBatchOrder(toUrl,'.dfkcp','请选择要删除的订单！','确定要批量删除此订单吗？');
     }
     function updateOrderBatch() {
-        var toUrl = "{:U('Order/ajaxUpdateBatchOrder')}";
+        var toUrl = "<?php echo U('Order/ajaxUpdateBatchOrder');?>";
         toOrderPayment('.dfkcp','请选择要结算的订单！',toUrl);
     }
     function orderPayment() {
         var str_order_sn = $("#str_order_sn").val();
         //ajax 检查是否拥有默认收货地址
-        var toUrl = "{:U('Order/ajaxCheckDefaultAddr')}";
+        var toUrl = "<?php echo U('Order/ajaxCheckDefaultAddr');?>";
         toCheckDefaultAddr(toUrl,str_order_sn);
 
     }
     function btnAddrSel(address_id) {
         var selTag = greenBtnTag("#div-addr-"+address_id+" button");
-        var toUrl = "{:U('Order/ajaxSetDefaultAddr')}";
+        var toUrl = "<?php echo U('Order/ajaxSetDefaultAddr');?>";
         toBtnAddrSel(address_id,selTag,toUrl);
     }
     //删除收货地址
     function delUserAddr(addr_id) {
-        var toUrl = "{:U('Order/ajaxDelAddr')}";
+        var toUrl = "<?php echo U('Order/ajaxDelAddr');?>";
         toDelUserAddr(toUrl,addr_id);
     }
     //编辑收货地址
     function editUserAddr(addr_id) {
-        var toUrl = "{:U('Order/ajaxEditAddr')}";
+        var toUrl = "<?php echo U('Order/ajaxEditAddr');?>";
         toEditUserAddr(toUrl,addr_id);
     }
     //添加收货地址
@@ -316,7 +306,7 @@
         if(checkmsg() === false){
             return;
         }
-        var toUrl = "{:U('Order/ajaxAddUserAddr')}";
+        var toUrl = "<?php echo U('Order/ajaxAddUserAddr');?>";
         var postData =  $("#form-addNewMsg").serialize();
         var afterHtml = "";
         $.post(

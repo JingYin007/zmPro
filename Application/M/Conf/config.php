@@ -1,6 +1,6 @@
 <?php
 //系统前台台配置文件
-//$imgServer= 'http://fetownew.com/';
+$imgServer= 'http://zmPro.com/';
 return array(
 	'TOKEN_ON'      =>    true,  // 是否开启令牌验证 默认关闭
 	'TOKEN_NAME'    =>    '__hash__',    // 令牌验证的表单隐藏字段名称，默认为__hash__
