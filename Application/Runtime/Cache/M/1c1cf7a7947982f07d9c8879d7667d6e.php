@@ -53,13 +53,13 @@
 <div class="srmtop">选择支付方式</div>
 <div class="zfxzfs">
     <p onclick="selRadio('ali')" class="zfyxhx">
-    	<label class="radio">
+        <label class="radio">
             <input type="radio" class="btnRadio btn-ali" checked="checked" name="TR">
             <i></i>支付宝支付<img src="http://zmPro.com/Public/M/images/26.jpg" />
         </label>
     </p>
     <p onclick="selRadio('wx')">
-    	<label class="radio">
+        <label class="radio">
             <input type="radio" class="btnRadio btn-wx" name="TR" >
             <i></i>微信支付<img src="http://zmPro.com/Public/M/images/27.jpg" />
         </label>
@@ -108,6 +108,7 @@
         }
     }
     function nextToPay() {
+        var toUrl = "<?php echo U('Order/ajax_deal_orderSn');?>";
         var flag = $("#nextTo").val();
         var pay_type = $('#pay_type').val();
         if (pay_type == 'none'){
@@ -118,10 +119,16 @@
                     window.location.href = "<?php echo U('Index/index');?>";
                 }
                 if (pay_type == 'wx'){
-                        $(".wxzfsmwz").show();
-                        $("#nextTo").val('再逛逛');
+                    $(".wxzfsmwz").show();
+                    $("#nextTo").val('再逛逛');
                 }else{
-                    $("#form-mobile").submit();
+                    $.post(
+                            toUrl,
+                            $("#form-mobile").serialize(),
+                            function (e) {
+                                $("#form-mobile").submit();
+                            },"JSON");
+
                 }
             }
         }
