@@ -462,17 +462,17 @@ function haveSessionUserID(){
     }
 }
 
-function send_verify($mobile){
+function send_verify($mobile,$name){
     $arr = range(0,9);
     $rand_keys = array_rand($arr,6);
     shuffle($rand_keys);
     $rand = implode('',$rand_keys);
-    if(cookie('code')){
-        cookie('code',null);
+    if(cookie($name)){
+        cookie($name,null);
     }
-    cookie('code',md5($rand.'fetow'),time()+6000,"/");
-    $appkey = "23496841";
-    $secret = "618776c025b93bb2f86e66a2b04eb294";
+    cookie($name,md5($rand.'zm'),time()+6000,"/");
+    $appkey = "xxxxxx";//需要阿里开发者提供的应用ID
+    $secret = "xxxxxxxxxxxxxxxxxxxxxxx";//填写对应secret
     vendor('Alimsg.top.TopClient');
     vendor('Alimsg.top.ResultSet');
     vendor('Alimsg.top.RequestCheckUtil');
@@ -486,7 +486,7 @@ function send_verify($mobile){
     $req->setSmsTemplateCode("SMS_24575052");
     $req->setExtend("3");
     $req->setSmsType("normal");
-    $req->setSmsFreeSignName("沸腾主义");
+    $req->setSmsFreeSignName("xxx");//TODO 注意此处依据短信模板填写对应信息
     $req->setSmsParam("{code:'".$rand."'}");
     $req->setRecNum($mobile);
     $resp = $c->execute($req);

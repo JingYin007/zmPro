@@ -55,20 +55,20 @@
     <p onclick="selRadio('ali')" class="zfyxhx">
         <label class="radio">
             <input type="radio" class="btnRadio btn-ali" checked="checked" name="TR">
-            <i></i>支付宝支付<img src="__MIMG__/26.jpg" />
+            支付宝支付<img src="__MIMG__/26.jpg" />
         </label>
     </p>
     <p onclick="selRadio('wx')">
         <label class="radio">
             <input type="radio" class="btnRadio btn-wx" name="TR" >
-            <i></i>微信支付<img src="__MIMG__/27.jpg" />
+            微信支付<img src="__MIMG__/27.jpg" />
         </label>
     </p>
     <div class="wxzfsmwz" style="display: none;">
         <img src="{:U('Order/wechatpaymenter',array('order_sn'=>$res['order_sn']))}" />
         <h1>方式一：用其他手机微信扫描此二维码即可付款；</h1>
         <h1>方式二：保存二维码，在微信端识别二维码付款；</h1>
-        <h1>方式三：微信搜索“真米如初官网”公众号，关注并进入网站购买；</h1>
+        <h1>方式三：微信搜索“XXXX官网”公众号，关注并进入网站购买；</h1>
     </div>
 </div>
 <div class="dlzcan" onclick="nextToPay()">
@@ -93,22 +93,15 @@
 </body>
 <script>
     function selRadio(type) {
-        var toUrl = "{:U('Order/ajax_deal_orderSn')}";
         $("#pay_type").val(type);
         if (checkInputMsg()){
-            $.post(
-                    toUrl,
-                    $("#form-mobile").serialize(),
-                    function (e) {
-                        if(type == 'ali'){
-                            $(".wxzfsmwz").hide();
-                            $("#nextTo").val('下一步');
-                        }
-                    },"JSON");
+            if(type == 'ali'){
+                $(".wxzfsmwz").hide();
+                $("#nextTo").val('下一步');
+            }
         }
     }
     function nextToPay() {
-        var toUrl = "{:U('Order/ajax_deal_orderSn')}";
         var flag = $("#nextTo").val();
         var pay_type = $('#pay_type').val();
         if (pay_type == 'none'){
@@ -122,13 +115,7 @@
                     $(".wxzfsmwz").show();
                     $("#nextTo").val('再逛逛');
                 }else{
-                    $.post(
-                            toUrl,
-                            $("#form-mobile").serialize(),
-                            function (e) {
-                                $("#form-mobile").submit();
-                            },"JSON");
-
+                    $("#form-mobile").submit();
                 }
             }
         }

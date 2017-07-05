@@ -82,17 +82,13 @@ class OrderController extends Controller
     //微信扫码支付
     public function wechatpaymenter(){
         // 虚拟的订单 请根据实际业务更改
-        $order_sn = I('get.order_sn');
+        $order_sn = I('get.order_sn')?I('get.order_sn'):'ztM'.time();
         $cartPayController = new CartpayController();
         $order_amount = $cartPayController->wxPayOrder($order_sn);
-        $oiRes = M('order_info oi')
-            ->field('oi.order_amount,og.product_name')
-            ->join('ms_order_goods og on oi.order_id = og.order_id')
-            ->where('oi.order_sn = '.$order_sn)
-            ->find();
-        $proName = $oiRes['product_name'];
+
+        $proName = '欢迎购买商品，愿您购物愉快';
         $order=array(
-            'body'=>'真米如初-'.$proName,
+            'body'=>$proName,
             'total_fee'=>$order_amount * 100,
             'out_trade_no'=> $order_sn.'M'.time(),// 订单号（需要根据自己的业务修改）,
             'product_id'=>1

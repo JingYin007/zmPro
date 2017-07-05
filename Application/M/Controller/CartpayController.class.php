@@ -6,54 +6,53 @@
  * Time: 10:51
  */
 namespace M\Controller;
-use Common\Model\CouponModel;
-use Common\Model\OrderModel;
-use M\Model\UserModel;
 use Think\Controller;
 class CartpayController extends Controller
 {
     public function index(){
         $this->display();
     }
-
     /**
      * 支付宝支付post提交页面
      */
     public function alipay(){
         if (IS_POST){
-            $out_trade_no = I('post.order_sn');
-            $oiRes = M('order_info oi')
-                ->field('oi.order_amount,og.product_name')
-                ->join('ms_order_goods og on oi.order_id = og.order_id')
-                ->where('oi.order_sn = '.$out_trade_no)
-                ->find();
-            $order_amount = $this->wxPayOrder($out_trade_no);
-            $proName = $oiRes['product_name'];
             Vendor('Alipay.aop.AopClient');
             Vendor('Alipay.aop.request.AlipayTradeWapPayRequest');
+            //$out_trade_no = I('post.order_sn');
+            /*
+             *  $out_trade_no 为自己业务逻辑中要支付的订单号
+             *      可从POST数据中提取，具体安全起见可自行加密操作 此处仅举例测试数据
+             *  $order_amount 为要进行支付的金额 注意要用小数转换
+             *      例如：3.50，10.00
+             *  $aliConfig 获取支付宝配置数据
+             */
+            $out_trade_no = '2017M'.time();
+            $body = '欢迎购买商品，愿您购物愉快';
+            $subject = '你好';
+            $order_amount = 9.00;
+            $aliConfig = C('ALI_CONFIG');
             $aop = new \AopClient();
-            $aop->gatewayUrl = 'https://openapi.alipay.com/gateway.do';
-            $aop->appId = '2017062307551519';
-            $aop->rsaPrivateKey = 'MIIEpAIBAAKCAQEA3Xlb5QMnRvru0ru1P9tHVn7xu+o1DN/EcqKJv91HMkfONWXTGL1Qc6DghBmgCUKbrJkC9JIDa2cLF/h8QiwgzVJnKoV5u9FgrnFaQmoAz7OdVC0p4U+U7Z0QUR/T/B9yJCgNe5v3YEKId5G29+xtvYICKvsZsDTEpZWuAtQ28ilmYuCHS2eJ2Dh4w8gVLl3dswSfVJ0DGRlT9JaSnRm/A6wLbWHcaHKHmLCeQCkxOqfY5S/b2p+tkiyK4v57S/Q917L68w2DMRzDyfonNihaCBvhcbHltKyjmmLgNrALAzeQIbUK3cuCt907xxC8HCPz2n2m1/yYUxGEOlE01SfxfwIDAQABAoIBADar6KVl2+JHu4DF2X5D8R5HBAFxVVsyOdpaiUqVoyekViEUW8H1qdCBXCr/8GOYz7kRpIsfKDzxGOn36ySipA5LUzBJ9r0IeKdXUAKpDD45hpLq+zWlYYwug4KjKr9IO/L0+C8VV0Gp6uopTFNzR7vKRiK6DaNTw19kzanhHRc172gJhnQ830hH48FymLp5UzVBMn8g69A0vVxGmMmQer11Y28YHgjXwnviTpqsNCHz+4QW+FXLEWSjgq3MTf+fGCMXhaHjJFOP+fEiiZNIgFVqlA7MGGlua0ZqccyMO9K6h+LMl9CfiCR67UZQ3Ie4hIr6Nm0+cYvyM/2w1R81JxECgYEA+HU0fyU4oGDvFDjuZ2xgDH2b/kdiN4gMX++nECI8nb5FArFZ7KtUxScSn+ERu99gnXrZS9bZqfdYuJdRoAIKrC+4YDKEgRHqfOZrVPWiXtU9TbGL4oF+g5kLo8aEfehiDxLQYRoo5DkOyRERsDXl0TsNulCJHLpHd2wALPDo7bMCgYEA5DJ1t1sT3FBXWVFfQwYpBYuMRMLdxF1cXVvvtuLm753TIRiDaKZ1qA4ahT1HZGwlD4zbuvLqIyF5mqNK8O/jbt9F8lzlMf53uGRzyGF3ts8RsmVI7sNKqQcKtUET103QLXR5txGYKccSx6JfVnPh2ILpFOOIY7pnPwhouOXS/wUCgYBSlttJfHzzSuWOKlKNTIgs/sAQ6Xerj+zVIxu8kDToFqxn9b43nshB9PgK70zuz5UVJBYBULzv88mpKpu2fZdAn2hBielj4im5NPrutewwa9/B6MfgFj2QzxoAaef21n1qF03vSTvYiWLx0Vu44GGxiFjK2ySIyR8igmMYjUhQYwKBgQCmbyMqOxROMI60x0Oah8itka0ZjaLfkFRIh0Bb/DwA8fRGBDH7xsSzcK3pFduXI8UYBV1RidA5FTYzEfwbpGsVt2S1swk7IGTDKQjFUklVHMvEeFjsQ6WViFxH/JHzC37VWElZu0xm1BofXo74aAaFul0zbgxQ6GhbMc/nY0Az3QKBgQDNhUKNaUB9Gi2czYPkyDAcOaBzCHyVDS+sI5Z5PwL9nS+2u/hHbXvIpQxfARgUDaVjpHmutF7Nhulreq+a7/LmiRMIG9mCbLlHg0LPaRqTmS2Loy6CK5NuSsYlZ1V2M3sAeWuPFqW/pIT6asO8BlR80mhv2tLvvMFLb5FjsprwPw==';
-            $aop->alipayrsaPublicKey='MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAu8jGLUWUWPGpSHOByqbQdMYriO0l9FiABy2B+S/c+tdNGX2Xk7GIr3YQPqhBIhMfH5q+7u4ny7lwVhbgGpmSiCwP7gQXxXNiwGX1aLOur8H7sGTEfZNFReQ5UqnEhZKeq/Lrt3WWCuu7cL7hBgSmy2b7tuckn4TO6k89LjT39nFfq5rTE/H/Cxbva4ORFj+GBH+fsiCwT750nLwHZM3oCbzmRwxyFc6CxAPiuh2vsL2sn9NGBIV8e+ZvYGStUQK9VHOUbP0eFuiCxoGyaPOffUy82aFqkqP5T1+fhhKfU3723Nf1eRgoOv5nBi7OMt7tz2Hxta68dcVKzdS1zeqSmwIDAQAB';
+            $aop->gatewayUrl = $aliConfig['gatewayUrl'];
+            $aop->appId = $aliConfig['appId'];
+            $aop->rsaPrivateKey = $aliConfig['rsaPrivateKey'];
+            $aop->alipayrsaPublicKey=$aliConfig['alipayrsaPublicKey'];
             $aop->apiVersion = '1.0';
             $aop->postCharset='UTF-8';
             $aop->format='json';
             $aop->signType='RSA2';
             $request = new \AlipayTradeWapPayRequest ();
             $bizContent = "{" .
-                "    \"body\":\"欢迎购买商品，愿您购物愉快.\"," .
-                "    \"subject\":\"真米如初-$proName\"," .
+                "    \"body\":\"$body.\"," .
+                "    \"subject\":\"$subject\"," .
                 "    \"out_trade_no\":\"$out_trade_no\"," .
                 "    \"timeout_express\":\"90m\"," .
                 "    \"total_amount\":$order_amount," .
                 "    \"product_code\":\"QUICK_WAP_WAY\"" .
                 "  }";
             $request->setBizContent($bizContent);
-            $notifyUrl = C('ALI_CONFIG')['notifyUrl'];
-            $returnUrl = C('ALI_CONFIG')['returnUrl'];
-            $request->setNotifyUrl($notifyUrl);
-            $request->setReturnUrl($returnUrl);
+            $request->setNotifyUrl($aliConfig['notifyUrl']);
+            $request->setReturnUrl($aliConfig['returnUrl']);
             $result = $aop->pageExecute ( $request);
             echo $result;
         }else{
@@ -63,7 +62,7 @@ class CartpayController extends Controller
     /**
      * 支付宝支付通知功能
      */
-    public function ali_notify(){
+    public function notify_ali(){
         $out_trade_no = I('post.out_trade_no');
         $this->toUpdatePayInfo($out_trade_no,'ali');
         echo 'success';
@@ -75,18 +74,17 @@ class CartpayController extends Controller
         Vendor('Weixinpay.Weixinpay');
         $wxpay = new \Weixinpay();
         $out_trade_no = $_GET['out_trade_no'] ? $_GET['out_trade_no'] : 0;
-        $out_trade_no = getDecrypt($out_trade_no);
-        $out_trade_no = $out_trade_no ? $out_trade_no : 0;
-        //获取订单支付状态
-        $oiRes = M('order_info')
-            ->field('pay_status,user_id')
-            ->where('order_sn = '.$out_trade_no)
-            ->find();
-        $pay_status = $oiRes['pay_status'];
-        //获取配置表中的支付开启状态
-        $wxPayTag = M('conf')
-            ->where('id = 1')
-            ->getField('wx_pay');
+        /*
+         * $out_trade_no 为自己业务逻辑中要支付的订单号
+         *      可从POST数据中提取，具体安全起见可自行加密操作 此处仅举例测试数据
+         * $wxPayTag  微信支付开启状态
+         *      一般为后台监控设置 此处测试定为开启状态
+         * $pay_status 获取订单支付状态
+         *      一般为支付前的订单查询 此处测试直接为未支付状态
+         *
+         */
+        $wxPayTag = true;
+        $pay_status = 0;
         if (!$wxPayTag){
             $content = 'Sorry,系统维护中，暂停支付';
         }else{
@@ -112,7 +110,7 @@ class CartpayController extends Controller
     /**
      * 微信支付监听接口 判断是否完成了微信支付操作
      */
-    public function notify(){
+    public function notify_wx(){
         // ↓↓↓下面的file_put_contents是用来简单查看异步发过来的数据 测试完可以删除；↓↓↓
         // 获取xml
         /*$xml=file_get_contents('php://input', 'r');
@@ -127,7 +125,7 @@ class CartpayController extends Controller
         $result = $wxpay->notify();
         if ($result) {
             $out_trade_no = explode('M',$result['out_trade_no'])[0] ;
-            $this->toUpdatePayInfo($out_trade_no);
+            $this->toUpdatePayInfo($out_trade_no,'wx');
             //TODO 进行页面跳转
         }
 
