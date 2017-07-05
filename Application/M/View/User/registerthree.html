@@ -1,0 +1,104 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="format-detection" content="telephone=no">
+    <title>注册</title>
+    <link href="__MCSS__/admin.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="__MJS__/jquery-1.8.0.min.js"></script>
+    <script type="text/javascript" src="__MJS__/dialog/layer.js"></script>
+</head>
+<body class="grzxbjk">
+	<div class="srmtop">输入密码</div>
+    <div class="singzhms yjtpbh">
+        <input id="pwd" name="" type="password" value="" placeholder="请输入8-12位密码" />
+        <img src="__MIMG__/miyx.jpg" />
+    </div>
+    <div class="singzhms yjtpbh">
+        <input id="repwd" name="" type="password" value="" placeholder="请输入8-12位密码" />
+        <img src="__MIMG__/miyx.jpg" />
+    </div>
+    <div class="dlzcan">
+    	<input id="btn" name="" type="button" value="保存"/>
+    </div>
+</body>
+</html>
+<script>
+    $('#pwd,#repwd').bind('keyup',function(){
+        var getpwdValue = document.getElementById('pwd').value;
+        var getrepwdValue = document.getElementById('repwd').value;
+        if(getpwdValue.length > 0 || getrepwdValue.length > 0){
+            document.getElementById('btn').style.color='#fff';
+            document.getElementById('btn').onclick=checkphonetourl;
+        } else {
+            document.getElementById('btn').style.color='#ff80b3';
+            document.getElementById('btn').onclick='';
+        }
+    });
+    var flag = true;
+    function checkphonetourl(){
+        var getpwdValue = document.getElementById('pwd').value;
+        var getrepwdValue = document.getElementById('repwd').value;
+        var pattern = /^(\w){8,12}$/;
+        var re = new RegExp(pattern);
+        if(!re.test(getpwdValue)){
+            layer.msg('密码不符合要求!',{time:1500});
+            return;
+        } else if(getpwdValue != getrepwdValue) {
+            layer.msg('两次输入的密码不一致',{time:1500});
+            return;
+        } else if(flag) {
+            flag = false;
+            var url = "{:U('ajax_addpassword')}";
+            var tourl = "{:U('login')}";
+            var data = {pwd:getpwdValue};
+            $.ajax({
+                url:url,
+                data:data,
+                dataType:'json',
+                type:'post',
+                success:function(msg){
+                    if(msg==111){
+                        layer.msg('注册成功！',{time:1500});
+                        window.setTimeout(function(){
+                            location.href=tourl;
+                        },2000);
+                    } else {
+                        layer.msg('请刷新重试',{time:1500});
+                    }
+                }
+            });
+        } else {
+            layer.msg('稍后马上跳转至登录页。。。',{time:1500});
+        }
+    }
+
+    //查看密码
+    $('.singzhms').find('img').click(function(){
+        var status = this.getAttribute('data-status');
+        if(status==="off"){
+            showinfo(this);
+            setTimeout(function(){hideinfo(this);},500);
+        } else {
+            hideinfo();
+        }
+    });
+    //查示密码信息
+    function showinfo(obj){
+        $(obj).parent().find('input')[0].setAttribute('type','text');
+        $(obj).attr('data-status','on');
+        $(obj).css('opacity',1);
+    }
+    //隐藏密码信息
+    function hideinfo(obj){
+        $.each($('.singzhms input'),function(i,v){
+            v.setAttribute('type','password');
+            $(v).parent().find('img').attr('data-status','off');
+            $(v).parent().find('img').css('opacity',0.2);
+        });
+        clearTimeout();
+    }
+
+</script>
+

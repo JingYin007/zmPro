@@ -1,0 +1,107 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="format-detection" content="telephone=no">
+    <title>注册</title>
+    <link href="__MCSS__/admin.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="__MJS__/jquery-1.8.0.min.js"></script>
+    <script type="text/javascript" src="__MJS__/dialog/layer.js"></script>
+</head>
+<body class="grzxbjk">
+	<div class="srmtop">输入密码</div>
+    <div class="wztsmi">
+    	<p>我们已向<span>{$phone}</span>发送6位数验证码短信</p>
+        <p>请查看短信并输入验证码</p>
+    </div>
+    <div class="pwd-box">
+        <input type="tel" maxlength="6" class="pwd-input" id="pwd-input">
+        <div class="fake-box">
+            <input type="password" readonly="">
+            <input type="password" readonly="">
+            <input type="password" readonly="">
+            <input type="password" readonly="">
+            <input type="password" readonly="">
+            <input type="password" readonly="">
+        </div>
+    </div>
+    <div class="wztsmi">
+    	<p id="msg">接受短信大约需要59秒</p>
+    </div>
+</body>
+<input type="hidden" id="refreshed" value="no">
+<script>
+    var $input = $(".fake-box input");
+    $("#pwd-input").on("input", function() {
+        var pwd = $(this).val().trim();
+        for (var i = 0, len = pwd.length; i < len; i++) {
+            $input.eq("" + i + "").val(pwd[i]);
+        }
+        $input.each(function() {
+            var index = $(this).index();
+            if (index >= len) {
+                $(this).val("");
+            }
+        });
+        if (len == 6) {
+            //执行其他操作
+            var url = "{:U('ajax_verify')}";
+            $.ajax({
+                url:url,
+                data:{'verify':pwd},
+                type:'post',
+                dataType:'json',
+                success:function(res){
+                    layer.msg(res.message,{time:1500});
+                }
+            });
+        }
+    });
+    $(document).ready(function(){
+        var bbc=$(".fake-box input").width();
+        $(".fake-box input").css("height", bbc);
+        var e = document.getElementById("refreshed");
+        if (e.value == "no") {
+            e.value = "yes";
+        } else {
+            var url = "{:U('register')}";
+            e.value = "no";
+            location.href=url;
+        }
+        tourltime();
+        //调用倒计时
+        var obj = document.getElementById('msg');
+        settime(obj);
+    });
+    //倒计时
+    var countdown=60;
+    function settime(obj) {
+        if (countdown == -1) {
+            countdown = 60;
+            return;
+        } else {
+            obj.innerHTML="接受短信大约需要" + countdown + "秒";
+            countdown--;
+        }
+        setTimeout(function() {
+                settime(obj) }
+            ,1000)
+    }
+
+    var totime=90;
+    function tourltime() {
+        if (totime == -1) {
+            var url = "{:U('register')}";
+            location.href=url;
+            return;
+        } else {
+            totime--;
+        }
+        setTimeout(function() {
+                tourltime() }
+            ,1000)
+    }
+</script>
+</html>
+

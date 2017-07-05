@@ -462,15 +462,15 @@ function haveSessionUserID(){
     }
 }
 
-function send_verify($mobile){
+function send_verify($mobile,$name){
     $arr = range(0,9);
     $rand_keys = array_rand($arr,6);
     shuffle($rand_keys);
     $rand = implode('',$rand_keys);
-    if(cookie('code')){
-        cookie('code',null);
+    if(cookie($name)){
+        cookie($name,null);
     }
-    cookie('code',md5($rand.'fetow'),time()+6000,"/");
+    cookie($name,md5($rand.'zm'),time()+6000,"/");
     $appkey = "23496841";
     $secret = "618776c025b93bb2f86e66a2b04eb294";
     vendor('Alimsg.top.TopClient');
