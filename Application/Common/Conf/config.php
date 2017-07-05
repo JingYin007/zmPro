@@ -11,8 +11,9 @@ return array(
     'URL_HTML_SUFFIX'      =>  'html', // URL伪静态
     'DEFAULT_CHARSET'      =>  'UTF-8',//指定编码
     'DEFAULT_TIMEZONE'     =>  'Asia/Shanghai', //设置时区
-    'PAGE_LISTROWS'        =>  '10',//默认条数
 
+    //开发模式下 右下角提示错误
+    'SHOW_PAGE_TRACE'       =>false,   // 显示页面Trace信息
     //数据库配置信息
     'DB_DEPLOY_TYPE'=> 1, // 设置分布式数据库支持
     'DB_RW_SEPARATE'=>true,
@@ -23,10 +24,8 @@ return array(
     'UPLOAD_MAX_SIZE'       => 1000*1024*1024, //设置为100M
 
     //ftp(外网服务器)上传文件相关参数
-    'FTP_SEVER'       => 'http://img.52zhenmi.com',  //此地址，作为图片读取的位置 请上线前仔细确认
-    'FTP_HOST'       => 'img.52zhenmi.com',
-    'WEB_SEVER'      => 'http://img.52zhenmi.com',
-    'WEB_M_SERVER'    => 'http://www.52zhenmi.com/m',
+    'FTP_SEVER'       => 'http://img.xxxxxxx.com',  //此地址，作为图片读取的位置 请上线前仔细确认
+    'FTP_HOST'       => 'img.xxxxxxx.com',
 
     'FTP_NAME'       => 'xxx',//ftp帐户
     'FTP_PWD'        => 'xxxxxxxxx',//ftp密码
@@ -37,21 +36,25 @@ return array(
     'REMOTE_ROOT'    => '/',//图片服务器根目录
     'ER_IMG'         =>__ROOT__.'/Public/M/images',
 
-    //开发模式下 右下角提示错误
-    'SHOW_PAGE_TRACE'       =>false,   // 显示页面Trace信息
-
+    //微信 开发配置
     'WEIXINPAY_CONFIG'  => array(
         'APPID'              => 'wxdxxxxxxx89', // 公众号APPID 微信支付APPID
         'MCHID'              => '1xxxxxxx2', // 微信支付MCHID 商户收款账号
         'KEY'                => 'MCxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxlW', // 微信支付KEY
         'APPSECRET'          => 'exxxxxxxxxxxxxxxxxxxxxxxxx7', // 公众帐号secert (公众号支付专用)
-        'NOTIFY_URL'         => 'http://xxxxxxxx/M/Cartpay/notify', // 接收支付状态的连接
+        'NOTIFY_URL'         => 'http://www.xxx.com/m/cartpay/notify_wx', // 接收支付状态的连接
         'TOKEN'             => 'zmxxx',
     ),
     //支付宝 支付配置
     'ALI_CONFIG'  => array(
-        'notifyUrl'              => 'http://www.xxx.com/m/cartpay/zm_notify', // 支付成功通知地址
-        'returnUrl'              => 'http://www.xxx.com' // 支付后跳转地址
+        'gatewayUrl'            => 'https://openapi.alipay.com/gateway.do',//支付宝网关（固定)'
+        'appId'                 => '2017xxxxxxxx9',//APPID即创建应用后生成
+        //由开发者自己生成: 请填写开发者私钥去头去尾去回车，一行字符串
+        'rsaPrivateKey'         =>  'MIIExxxxxxxxxxxxxxxxxxxxxxxxxxxq',
+        //支付宝公钥，由支付宝生成: 请填写支付宝公钥，一行字符串
+        'alipayrsaPublicKey'    =>  'IIBxxxxxxxxxxxxxxxxxxxEFAA',
+        'notifyUrl'             => 'http://www.xxx.com/m/cartpay/notify_ali', // 支付成功通知地址
+        'returnUrl'             => 'http://www.xxx.com' // 支付后跳转地址
     ),
-    );
+);
 ?>
