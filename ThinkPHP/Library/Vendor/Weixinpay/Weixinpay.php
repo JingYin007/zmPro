@@ -181,7 +181,7 @@ class Weixinpay {
 
             $total_fee = floatval($all_order_amount)*100;
             $order=array(
-                'body'=>'真米如初',// 商品描述（需要根据自己的业务修改）
+                'body'=>'木头部落',// 商品描述（需要根据自己的业务修改）
                 'total_fee'=>$total_fee,// 订单金额  以(分)为单位（需要根据自己的业务修改）
                 'out_trade_no'=>$out_trade_no.'M'.time(),// 订单号（需要根据自己的业务修改）
                 'product_id'=>'1',// 商品id（需要根据自己的业务修改）
