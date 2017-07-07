@@ -430,38 +430,6 @@ function curl_get_contents($url){
     return $r;
 }
 
-//资讯点击量
-function clicks($id){
-    $User = M("article");
-    $User->where("id=$id")->setInc('clicks',1);
-}
-
-/**
- * 获取配置 value值
- * @param $tag 标签
- * @return mixed
- */
-function get_config($tag){
-    $img = M('conf_mi')
-        ->where(" tag = '$tag'")
-        ->getField('value');
-    return $img;
-}
-
-function haveSessionUserID(){
-    if (is_mobile() && !is_weixin()){
-        //判断cookie中是否存在ID值
-        $sessionUserID = session('sessionUserID');
-        if ($sessionUserID){
-            return true;
-        }else{
-            return false;
-        }
-    }else{
-        return false;
-    }
-}
-
 function send_verify($mobile,$name){
     $arr = range(0,9);
     $rand_keys = array_rand($arr,6);

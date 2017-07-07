@@ -43,7 +43,7 @@ return array(
         'KEY'                => 'MCxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxlW', // 微信支付KEY
         'APPSECRET'          => 'exxxxxxxxxxxxxxxxxxxxxxxxx7', // 公众帐号secert (公众号支付专用)
         'NOTIFY_URL'         => 'http://www.xxx.com/m/cartpay/notify_wx', // 接收支付状态的连接
-        'TOKEN'             => 'zmxxx',
+        'TOKEN'             => 'zmxxx',//公众号设置的token值
     ),
     //支付宝 支付配置
     'ALI_CONFIG'  => array(
