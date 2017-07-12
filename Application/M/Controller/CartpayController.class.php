@@ -59,6 +59,44 @@ class CartpayController extends Controller
             echo 'sorry,非法请求失败';
         }
     }
+
+    /**
+     * 电脑端唤醒 支付宝扫码支付接口
+     */
+    public function aliPayPage(){
+        $out_trade_no = '2017PC'.time();
+        $order_amount = '12.88';
+        $proName = "真米黑米 XXXXXX";
+        Vendor('Alipay.aop.AopClient');
+        Vendor('Alipay.aop.request.AlipayTradePagePayRequest');
+        //构造参数
+        $aop = new \AopClient();
+        $aliConfig = C('ALI_CONFIG');
+        $aop->gatewayUrl = $aliConfig['gatewayUrl'];
+        $aop->appId = $aliConfig['appId'];
+        $aop->rsaPrivateKey = $aliConfig['rsaPrivateKey'];
+
+        $aop->apiVersion = '1.0';
+        $aop->signType = 'RSA2';
+        $aop->postCharset= 'utf-8';
+        $aop->format='json';
+        $request = new \AlipayTradePagePayRequest ();
+        $request->setReturnUrl($aliConfig['returnPcUrl']);
+        $request->setNotifyUrl($aliConfig['notifyUrl']);
+        $request->setBizContent(
+            "{" .
+            "    \"product_code\":\"FAST_INSTANT_TRADE_PAY\"," .
+            "    \"subject\":\"$proName\"," .
+            "    \"out_trade_no\":\"$out_trade_no\"," .
+            "    \"total_amount\":$order_amount," .
+            "    \"body\":\"Iphone6 16G\"" .
+            "  }");
+        //请求
+        $result = $aop->pageExecute ($request);
+        //输出
+        echo $result;
+    }
+
     /**
      * 支付宝支付通知功能
      */

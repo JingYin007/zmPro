@@ -54,7 +54,8 @@ return array(
         //支付宝公钥，由支付宝生成: 请填写支付宝公钥，一行字符串
         'alipayrsaPublicKey'    =>  'IIBxxxxxxxxxxxxxxxxxxxEFAA',
         'notifyUrl'             => 'http://www.xxx.com/m/cartpay/notify_ali', // 支付成功通知地址
-        'returnUrl'             => 'http://www.xxx.com' // 支付后跳转地址
+        'returnUrl'             => 'http://www.xxx.com', // 支付后跳转地址
+        'returnPcUrl'           => 'http://www.xxx.com/Home', // PC端扫码支付后跳转地址
     ),
 );
 ?>
