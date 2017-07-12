@@ -96,7 +96,6 @@ class CartpayController extends Controller
         //输出
         echo $result;
     }
-
     /**
      * 支付宝支付通知功能
      */
