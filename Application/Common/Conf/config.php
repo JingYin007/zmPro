@@ -6,7 +6,7 @@ return array(
     'DEFAULT_MODULE'       =>   'M', //设置默认模块
     'MODULE_ALLOW_LIST'    =>   array('Admin','M'),// 设置允许访问的模块列表
     'MODULE_DENY_LIST'     =>   array('Common','Runtime'),// 设置禁止访问的模块列表
-    'URL_MODEL'            =>   2,      //URL模式
+    'URL_MODEL'            =>   1,      //URL模式
     'URL_CASE_INSENSITIVE' =>   true,//URL不区分大小写
     'URL_HTML_SUFFIX'      =>  'html', // URL伪静态
     'DEFAULT_CHARSET'      =>  'UTF-8',//指定编码
@@ -44,6 +44,12 @@ return array(
         'APPSECRET'          => 'exxxxxxxxxxxxxxxxxxxxxxxxx7', // 公众帐号secert (公众号支付专用)
         'NOTIFY_URL'         => 'http://www.xxx.com/m/cartpay/notify_wx', // 接收支付状态的连接
         'TOKEN'             => 'zmxxx',
+
+        // 微信开放平台 使用微信帐号登录App或者网站 配置信息
+        'OPEN_APPID' => 'wxbd961b2a6b7b2963', //应用　AppID
+        'OPEN_APPSECRET' => 'e63979d38544478ff8d79956e6ca2e90',//应用 AppSecret
+        'OPEN_CALLBACKURL' => 'http://www.52zhenmi.com/Home/Login/wxBack', //微信用户使用微信扫描二维码并且确认登录后，PC端跳转路径
+
     ),
     //支付宝 支付配置
     'ALI_CONFIG'  => array(

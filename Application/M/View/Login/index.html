@@ -1,0 +1,36 @@
+<html>
+<script src="http://res.wx.qq.com/connect/zh_CN/htmledition/js/wxLogin.js"></script>
+<style>
+    #login_container{
+        width: 300px;
+        height: 300px;
+    }
+    #wxsqdl{
+        width: 50px;
+        height: 50px;
+    }
+</style>
+<body>
+<center>
+    <div class="wxsqdl">
+        <a href="{:U('Login/wxIndex')}">
+            <img id="wxsqdl" src="__MIMG__/wxsqdl.png" />
+        </a>
+    </div>
+    <h5>第三方账号快速登录</h5>
+    <img id="login_container" />
+</center>
+
+</body>
+<script>
+    var obj = new WxLogin({
+        id:"login_container",
+        appid: "wxbd961b2a6b7b2963",
+        scope: "snsapi_login",
+        redirect_uri: "{$sysCfg.redirect_uri}",
+        state: "{$sysCfg.wx_state}",
+        style: "black",
+        href: ""
+    });
+</script>
+</html>
