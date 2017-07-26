@@ -30,14 +30,13 @@ namespace M\Controller;
 use Common\Model\CouponModel;
 use Think\Controller;
 class LoginController extends Controller {
-    private $sysconfig='';
     private $appID;
     private $appSecret;
     private $callBackUrl;
     public function __construct()
     {
         parent::__construct();
-        $wxConf = C('WEIXINPAY_CONFIG');
+        $wxConf = C('WEIXIN_LOGIN');
         $this->appID = $wxConf['OPEN_APPID'];
         $this->appSecret = $wxConf['OPEN_APPSECRET'];
         $this->callBackUrl = $wxConf['OPEN_CALLBACKURL'];
@@ -68,6 +67,7 @@ class LoginController extends Controller {
 
     public function wxBack(){
         if($_GET['state']!=$_SESSION["wx_state"]){
+            echo 'sorry,网络请求失败...';
             exit("5001");
         }
         $url='https://api.weixin.qq.com/sns/oauth2/access_token?appid='.$this->appID.'&secret='.$this->appSecret.'&code='.$_GET['code'].'&grant_type=authorization_code';
@@ -80,6 +80,9 @@ class LoginController extends Controller {
         //得到 用户资料
         //print_r($user_info);
         $this->dealWithWxLogin($user_info);
+    }
+    public function dealWithWxLogin($user_info){
+        //TODO 数据处理
     }
 
 }

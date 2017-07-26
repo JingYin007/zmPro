@@ -43,17 +43,13 @@ return array(
         'KEY'                => 'MCxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxlW', // 微信支付KEY
         'APPSECRET'          => 'exxxxxxxxxxxxxxxxxxxxxxxxx7', // 公众帐号secert (公众号支付专用)
         'NOTIFY_URL'         => 'http://www.xxx.com/m/cartpay/notify_wx', // 接收支付状态的连接
-<<<<<<< HEAD
         'TOKEN'             => 'zmxxx',
-
+    ),
+    'WEIXIN_LOGIN' => array(
         // 微信开放平台 使用微信帐号登录App或者网站 配置信息
         'OPEN_APPID' => 'wxbd961b2a6b7b2963', //应用　AppID
-        'OPEN_APPSECRET' => 'e63979d38544478ff8d79956e6ca2e90',//应用 AppSecret
-        'OPEN_CALLBACKURL' => 'http://www.52zhenmi.com/Home/Login/wxBack', //微信用户使用微信扫描二维码并且确认登录后，PC端跳转路径
-
-=======
-        'TOKEN'             => 'zmxxx',//公众号设置的token值
->>>>>>> 1830bbd8f4d390af9088f0a878784b41252796ee
+        'OPEN_APPSECRET' => 'e6xxxxxxxxxxxxxxxxxxxxe90',//应用 AppSecret
+        'OPEN_CALLBACKURL' => 'http://www.52zhenmi.com/M/Login/wxBack', //微信用户使用微信扫描二维码并且确认登录后，PC端跳转路径
     ),
     //支付宝 支付配置
     'ALI_CONFIG'  => array(
