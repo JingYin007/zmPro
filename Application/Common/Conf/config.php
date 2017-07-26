@@ -43,6 +43,7 @@ return array(
         'KEY'                => 'MCxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxlW', // 微信支付KEY
         'APPSECRET'          => 'exxxxxxxxxxxxxxxxxxxxxxxxx7', // 公众帐号secert (公众号支付专用)
         'NOTIFY_URL'         => 'http://www.xxx.com/m/cartpay/notify_wx', // 接收支付状态的连接
+<<<<<<< HEAD
         'TOKEN'             => 'zmxxx',
 
         // 微信开放平台 使用微信帐号登录App或者网站 配置信息
@@ -50,6 +51,9 @@ return array(
         'OPEN_APPSECRET' => 'e63979d38544478ff8d79956e6ca2e90',//应用 AppSecret
         'OPEN_CALLBACKURL' => 'http://www.52zhenmi.com/Home/Login/wxBack', //微信用户使用微信扫描二维码并且确认登录后，PC端跳转路径
 
+=======
+        'TOKEN'             => 'zmxxx',//公众号设置的token值
+>>>>>>> 1830bbd8f4d390af9088f0a878784b41252796ee
     ),
     //支付宝 支付配置
     'ALI_CONFIG'  => array(
@@ -60,7 +64,8 @@ return array(
         //支付宝公钥，由支付宝生成: 请填写支付宝公钥，一行字符串
         'alipayrsaPublicKey'    =>  'IIBxxxxxxxxxxxxxxxxxxxEFAA',
         'notifyUrl'             => 'http://www.xxx.com/m/cartpay/notify_ali', // 支付成功通知地址
-        'returnUrl'             => 'http://www.xxx.com' // 支付后跳转地址
+        'returnUrl'             => 'http://www.xxx.com', // 支付后跳转地址
+        'returnPcUrl'           => 'http://www.xxx.com/Home', // PC端扫码支付后跳转地址
     ),
 );
 ?>

@@ -99,6 +99,9 @@
                 $(".wxzfsmwz").hide();
                 $("#nextTo").val('下一步');
             }
+        }else {
+            $(".btn-ali").attr("checked","checked");
+            $(".btn-wx").removeAttr("checked");
         }
     }
     function nextToPay() {
