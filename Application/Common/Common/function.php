@@ -427,7 +427,8 @@ function curl_get_contents($url){
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);        //返回结果
     $r=curl_exec($ch);
     curl_close($ch);
-    return $r;
+    $res = json_decode($r,true);
+    return $res;
 }
 
 function send_verify($mobile,$name){

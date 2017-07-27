@@ -172,7 +172,6 @@ class Weixinpay {
 
             // curl获取prepay_id
             $result=curl_get_contents($url);
-            $result=json_decode($result,true);
             $openid=$result['openid'];
             // 订单数据  请根据订单号out_trade_no 从数据库中查出实际的body、total_fee、out_trade_no、product_id
 
