@@ -26,7 +26,7 @@
 
           佛祖保佑        永无Bug
 */
-namespace M\Controller;
+namespace Home\Controller;
 use Common\Model\CouponModel;
 use Think\Controller;
 class LoginController extends Controller {
@@ -40,7 +40,6 @@ class LoginController extends Controller {
         $this->appID = $wxConf['OPEN_APPID'];
         $this->appSecret = $wxConf['OPEN_APPSECRET'];
         $this->callBackUrl = $wxConf['OPEN_CALLBACKURL'];
-        layout(false);
     }
     //登录
     public function index(){
@@ -54,14 +53,15 @@ class LoginController extends Controller {
         $this->display();
     }
     public function wxIndex(){
-        //微信登录
-        //-------生成唯一随机串防CSRF攻击
+        //--微信登录-----生成唯一随机串防CSRF攻击
         $state  = md5(uniqid(rand(), TRUE));
         $_SESSION["wx_state"]    =   $state; //存到SESSION
         $callback = urlencode($this->callBackUrl);
         'https://open.weixin.qq.com/connect/qrconnect?appid=APPID&redirect_uri=REDIRECT_URI&response_type=code&scope=SCOPE&state=STATE#wechat_redirect';
-        $wxurl = "https://open.weixin.qq.com/connect/qrconnect?appid=".$this->appID."&redirect_uri="
-            .$callback."&response_type=code&scope=snsapi_login&state=".$state."#wechat_redirect";
+        $wxurl = "https://open.weixin.qq.com/connect/qrconnect?appid="
+                .$this->appID."&redirect_uri="
+                .$callback."&response_type=code&scope=snsapi_login&state="
+                .$state."#wechat_redirect";
         header("Location: $wxurl");
     }
 
@@ -73,16 +73,19 @@ class LoginController extends Controller {
         $url='https://api.weixin.qq.com/sns/oauth2/access_token?appid='.$this->appID.'&secret='.$this->appSecret.'&code='.$_GET['code'].'&grant_type=authorization_code';
         $arr = curl_get_contents($url);
         //得到 access_token 与 openid
-        //print_r($arr);
-
         $url='https://api.weixin.qq.com/sns/userinfo?access_token='.$arr['access_token'].'&openid='.$arr['openid'].'&lang=zh_CN';
         $user_info = curl_get_contents($url);
-        //得到 用户资料
-        //print_r($user_info);
         $this->dealWithWxLogin($user_info);
     }
+
+    /**
+     * 根据微信授权用户的信息 进行下一步的梳理
+     * @param $user_info
+     */
     public function dealWithWxLogin($user_info){
         //TODO 数据处理
+        var_dump($user_info);
+        die;
     }
 
 }
