@@ -33,21 +33,13 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
  
- namespace Org\Qrcode
+ namespace Org\Qrcode;
 
 /*
  * Version: 1.1.4
  * Build: 2010100721
  */
-
-
-
 //---- qrconst.php -----------------------------
-
-
-
-
-
 /*
  * PHP QR Code encoder
  *
@@ -104,33 +96,21 @@
 
 
 //---- merged_config.php -----------------------------
-
-
-
-
 /*
  * PHP QR Code encoder
- *
  * Config file, tuned-up for merged verion
  */
      
     define('QR_CACHEABLE', false);       // use cache - more disk reads but less CPU power, masks and format templates are stored there
     define('QR_CACHE_DIR', false);       // used when QR_CACHEABLE === true
-    define('QR_LOG_DIR', false);         // default error logs dir   
-    
+    define('QR_LOG_DIR', false);         // default error logs dir
+
     define('QR_FIND_BEST_MASK', true);                                                          // if true, estimates best mask (spec. default, but extremally slow; set to false to significant performance boost but (propably) worst quality code
     define('QR_FIND_FROM_RANDOM', 2);                                                       // if false, checks all masks available, otherwise value tells count of masks need to be checked, mask id are got randomly
     define('QR_DEFAULT_MASK', 2);                                                               // when QR_FIND_BEST_MASK === false
-                                                  
     define('QR_PNG_MAXIMUM_SIZE',  1024);                                                       // maximum allowed png image width (in pixels), tune to make sure GD and PHP can handle such big images
-                                                  
-
-
 
 //---- qrtools.php -----------------------------
-
-
-
 
 /*
  * PHP QR Code encoder
@@ -156,7 +136,6 @@
  */
 
     class QRtools {
-    
         //----------------------------------------------------------------------
         public static function binarize($frame)
         {
@@ -167,7 +146,6 @@
                     $frameLine[$i] = (ord($frameLine[$i])&1)?'1':'0';
                 }
             }
-            
             return $frame;
         }
         
@@ -2114,7 +2092,7 @@
         public function eatKanji()
         {
             $p = 0;
-            
+
             while($this->identifyMode($p) == QR_MODE_KANJI) {
                 $p += 2;
             }
@@ -2123,7 +2101,7 @@
             if($ret < 0)
                 return -1;
 
-            return $run;
+            return $ret;
         }
 
         //----------------------------------------------------------------------
@@ -2937,8 +2915,7 @@
         //----------------------------------------------------------------------
         public function getCode()
         {
-            $ret;
-
+            //$ret;
             if($this->count < $this->dataLength) {
                 $row = $this->count % $this->blocks;
                 $col = $this->count / $this->blocks;
