@@ -14,12 +14,4 @@ class IndexController extends Controller
         $this->display();
     }
 
-    /**
-     * 二维码测试效果
-     * png($text, $outfile = false, $level = QR_ECLEVEL_L, $size = 3, $margin = 4, $saveandprint=false)
-     */
-    public function qrCode(){
-        vendor("phpqrcode.phpqrcode");
-        \QRcode::png('avc','qrCodeCoco.jpg',QR_ECLEVEL_H,15,0,true);
-    }
 }

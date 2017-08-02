@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<script src="__MJS__/jquery-1.8.0.min.js"></script>
+<script src="https://cdn.bootcss.com/jquery/3.2.1/core.js"></script>
+<script src="https://cdn.bootcss.com/jquery.qrcode/1.0/jquery.qrcode.min.js"></script>
+<!--<script src="__MJS__/jquery.qrcode.min.js"></script>-->
+<body>
+
+
+<div id="qrcode"></div>
+</body>
+<script>
+    $("#qrcode").qrcode("Hello world");
+    $('#qrcode').qrcode({width: 64,height: 64,text: "Hello Baby"});
+</script>
+</html>
