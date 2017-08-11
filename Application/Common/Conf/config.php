@@ -63,5 +63,12 @@ return array(
         'returnUrl'             => 'http://www.xxx.com', // 支付后跳转地址
         'returnPcUrl'           => 'http://www.xxx.com/Home', // PC端扫码支付后跳转地址
     ),
+    //邮件发送 配置
+    'EMAIL_CONFIG' => array(
+        'host' => 'smtp.163.com',
+        'post' => '25',
+        'username' => '15117972683@163.com',//TODO 邮箱账号
+        'password' => 'motzxx07070',//TODO 客户端密码
+    ),
 );
 ?>

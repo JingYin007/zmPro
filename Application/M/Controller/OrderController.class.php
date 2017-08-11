@@ -34,7 +34,7 @@ class OrderController extends Controller
         $postData = I('get.');
         $waybillCode = $postData['courier_num']?$postData['courier_num']:null;
         //TODO 测试物流单号
-        $waybillCode = '778880350676';
+        $waybillCode = 'VA36518521454';
         $res = expressinfo($waybillCode);
         $trace = $res['data'];
         $express = $this->traceExpress();

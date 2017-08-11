@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+    <title>Title</title>
+    <script type="text/javascript" src="__MJS__/jquery-1.8.0.min.js"></script>
+    <script type="text/javascript" src="__MJS__/dialog/layer.js"></script>
+    <script type="text/javascript" src="__MJS__/dialog.js"></script>
+
+    <style type="text/css">
+        body{
+            width: 100%;
+            font-size: 15px;
+            font-family: "楷体", Arial, Helvetica, sans-serif;
+        }
+        .title{
+            margin-top: 20px;
+            margin-bottom: 35px;
+            display: block;
+            font-size: 20px;
+            text-align: center;
+        }
+
+        .div-email p{
+            width: 60px;
+            height: 20px;
+        }
+        .div-email input{
+            height: 25px;
+            padding-right: 1px;
+        }
+        .content{
+            height: 100px;
+            width: 90%;
+        }
+        .send{
+            float: right;
+            margin-right: 20px;
+            margin-top: 12px;
+            width: 50px;
+            height: 30px;;
+        }
+        input,.content{
+            margin-left: 10px;
+            padding-left: 2px;
+            color: #c9c9c9;
+            font-size: 12pt;
+            font-family: "楷体", Arial, Helvetica, sans-serif;
+        }
+    </style>
+</head>
+
+<body>
+<label class="title">邮件发送功能</label>
+<form id="form-email">
+    <div class="div-email">
+        <p>邮箱号:</p>
+        <input name="email" placeholder="请输入对方邮箱号"/>
+
+        <p>主题:</p>
+        <input name="subject" placeholder="请输入主题"/>
+
+        <p>内容:</p>
+        <textarea class="content" name="content" placeholder="请输入邮件信息"> </textarea>
+    </div>
+    <input type="button" class="send" onclick="send()" value="发送"/>
+</form>
+</body>
+</html>
+<script>
+    function send() {
+        var toUrl = "{:U('Email/send')}";
+        var postData = $("#form-email").serialize();
+        $.ajax({
+            type: "POST",
+            url: toUrl,
+            data: postData,
+            dataType: "json",
+            success: function (res) {
+                layer.msg(res.message);
+            }
+        });
+    }
+</script>
