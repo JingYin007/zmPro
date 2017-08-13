@@ -30,7 +30,7 @@ class Email{
             $mail->SMTPAuth = true;
             $mail->Username = $emailConf['username'];//TODO 邮箱账号
             $mail->Password = $emailConf['password']; //TODO 客户端密码
-            $mail->setFrom($emailConf['username'], '木头人');
+            $mail->setFrom($emailConf['username'], $emailConf['sender']);//TODO 发送人信息
             $mail->addAddress($to, 'xx');
             $mail->Subject = $title;
             $mail->msgHTML($content);

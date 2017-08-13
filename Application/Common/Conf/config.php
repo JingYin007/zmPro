@@ -67,8 +67,9 @@ return array(
     'EMAIL_CONFIG' => array(
         'host' => 'smtp.163.com',
         'post' => '25',
-        'username' => '15117972683@163.com',//TODO 邮箱账号
-        'password' => 'motzxx07070',//TODO 客户端密码
+        'username' => '151xxxxxx@163.com',//TODO 邮箱账号
+        'password' => 'xxxxxxxxx',//TODO 客户端授权密码
+        'sender' => '木头人',//TODO 发送人昵称
     ),
 );
 ?>
