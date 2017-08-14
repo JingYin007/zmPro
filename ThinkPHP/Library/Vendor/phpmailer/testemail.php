@@ -28,15 +28,15 @@ $mail->Port = 25;
 //Whether to use SMTP authentication
 $mail->SMTPAuth = true;
 //Username to use for SMTP authentication
-$mail->Username = "15117972683@163.com";
+$mail->Username = "151xxxxxxxxxx@163.com";
 //Password to use for SMTP authentication
-$mail->Password = "motzxx07070";
+$mail->Password = "xxxxxxxx070";
 //Set who the message is to be sent from
-$mail->setFrom('15117972683@163.com', '清风');
+$mail->setFrom('151xxxxxxxxxxx@163.com', '清风');
 //Set an alternative reply-to address
 //$mail->addReplyTo('replyto@example.com', 'First Last');
 //Set who the message is to be sent to
-$mail->addAddress('930959695@qq.com', '木头');
+$mail->addAddress('xxxxxxxxxxx@qq.com', '木头');
 //Set the subject line
 $mail->Subject = '就是这么逗！';
 //Read an HTML message body from an external file, convert referenced images to embedded,
