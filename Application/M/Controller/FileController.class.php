@@ -13,6 +13,7 @@ use Think\Controller;
 
 class FileController extends Controller
 {
+
     public function index()
     {
         $this->display();
@@ -34,11 +35,13 @@ class FileController extends Controller
         $res = file_get_contents('file_hello.txt');
         var_dump($res);
     }
+
+    /**
+     * 遍历目录 文件
+     * @param $dir
+     */
     public function loopDir($dir){
-
         $handle = opendir($dir);
-
-
         while (false !==($file = readdir($handle))){
             if ($file != '.' && $file != '..'){
                 echo $file."<br/>";
@@ -61,4 +64,18 @@ class FileController extends Controller
         $dir = './test';
         $this->loopDir($dir);
     }
+
+    public function sess(){
+        $nn = new \SplStack();
+        $nn->push('1');
+        $nn->push('2');
+
+        echo $nn->pop();
+        echo $nn->pop();
+
+    }
+    static function autoload($class){
+        var_dump($class) ;
+    }
+
 }
