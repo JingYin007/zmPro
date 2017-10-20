@@ -9,15 +9,21 @@
 namespace M\Controller;
 
 
-class TestController
+use Think\Controller;
+
+class TestController extends Controller
 {
     public function __construct()
     {
+        parent::__construct();
         header("Content-Type:text/html;charset=utf-8");
     }
 
     public function index()
     {
 
+    }
+    public function page(){
+        $this->display();
     }
 }

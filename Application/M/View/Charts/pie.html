@@ -1,0 +1,52 @@
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+     <!--jQuery，注意 Highcharts 4.2 开始不再依赖 jQuery-->
+    <script src="https://cdn.hcharts.cn/jquery/jquery-1.8.3.min.js"></script>
+    <script src="__MJS__/highmaps/code/highcharts.js"></script>
+    <script src="__MJS__/highmaps/code/highcharts-3d.js"></script>
+    <script src="__MJS__/modules/code/exporting.js"></script>
+    <script src="__MJS__/highmaps/code/highcharts.js"></script>
+</head>
+<div id="container" style="height: 400px"></div>
+</html>
+
+<script>
+    $(function () {
+        $('#container').highcharts({
+            chart: {
+                type: 'pie',
+                options3d: {
+                    enabled: true,
+                    alpha: 45
+                }
+            },
+            title: {
+                text: '简数科技每周水果消耗量'
+            },
+            subtitle: {
+                text: 'Highcharts 中的3D环形图'
+            },
+            plotOptions: {
+                pie: {
+                    innerSize: 100,
+                    depth: 45
+                }
+            },
+            series: [{
+                name: '货物金额',
+                data: [
+                    ['香蕉', 8],
+                    ['猕猴桃', 3],
+                    ['桃子', 1],
+                    ['橘子', 6],
+                    ['苹果', 8],
+                    ['梨', 4],
+                    ['柑橘', 4],
+                    ['橙子', 1],
+                    ['葡萄 (串)', 1]
+                ]
+            }]
+        });
+    });
+</script>
