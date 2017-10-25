@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>留言本</title>
+</head>
+<body>
+<form action="{:U('Index/store')}" method="post">
+    标题：<input type="text" name="title"><br>
+    内容：<textarea cols="35" rows="10" name="content"></textarea><br>
+    留言人：<input type="text" name="user_name"><br>
+    <input type="submit" value="添加">
+</form>
+</body>
+</html>

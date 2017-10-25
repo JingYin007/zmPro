@@ -13,11 +13,19 @@ return array(
     'DEFAULT_TIMEZONE'     =>  'Asia/Shanghai', //设置时区
 
     //开发模式下 右下角提示错误
-    'SHOW_PAGE_TRACE'       =>false,   // 显示页面Trace信息
+    'SHOW_PAGE_TRACE'       =>true,   // 显示页面Trace信息
     //数据库配置信息
     'DB_DEPLOY_TYPE'=> 1, // 设置分布式数据库支持
     'DB_RW_SEPARATE'=>true,
     'DB_TYPE'       => 'mysql', //分布式数据库类型必须相同
+    'DB_HOST'               =>  '127.0.0.1', // 服务器地址
+    'DB_NAME'               =>  'test',          // 数据库名
+    'DB_USER'               =>  'root',      // 用户名
+    'DB_PWD'                =>  '',          // 密码
+    'DB_PORT'               =>  '3306',        // 端口
+    'DB_PREFIX'             =>  '',    // 数据库表前缀
+
+
     'DB_CHARSET'    => 'utf8', // 字符集
     'VAR_PAGE'=>'p',
 
