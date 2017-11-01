@@ -36,17 +36,57 @@ class AlgorithmController extends Controller
         //$this->sortCompare();
         //$res = $this->mergeSort($arr);
 
-        $res = $this->muFun2('make__by_id');
+        $arr = [1,2,3];$arr2=[5,7,8];$arr3 = [6,6,6];
+        $res = $this->myFun4($arr,$arr2,$arr3);
         var_dump($res);
 
     }
 
     /**
+     * 不得使用 array_merge()实现数组的合并
+     * $arr = [1,2,3];$arr2=[5,7,8];$arr3 = [6,6,6];
+     * $res = $this->myFun4($arr,$arr2,$arr3);
+     * @return array
+     */
+    public function myFun4(){
+        $arrs = func_get_args();
+        $arrNew = [];
+        foreach ($arrs as $arr){
+            if (is_array($arr)){
+                foreach ($arr as $v){
+                    $arrNew[]= $v;
+                }
+            }
+        }
+        return $arrNew;
+    }
+    /**
+     * 不得使用内置函数 进行字符串的反转
+     * @param $str
+     * @return string
+     */
+    public function myFun3($str){
+        $newStr = '';
+
+        for ($i=0;true;$i++){
+            if (!isset($str[$i])){
+                break;
+            }
+        }
+        for ($j = $i-1;$j>=0;$j--){
+            $newStr.= ($str[$j]);
+        }
+        /*for ($i = strlen($str)-1;$i>= 0;$i--){
+            $newStr.= ($str[$i]);
+        }*/
+        return $newStr;
+    }
+    /**
      * make_by_id => MakeById, hello_my_dear => HelloMyDear
      * @param $str
      * @return string
      */
-    public function muFun2($str){
+    public function myFun2($str = 'make__by_id'){
         $arr = explode('_',$str);
         $newStr = '';
         foreach ($arr as &$v){
