@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+
+    <title>图片地图</title>
+    <script type="text/javascript" src="__MJS__/jquery-1.8.0.min.js"></script>
+    <script type="text/javascript" src="__MJS__/dialog/layer.js"></script>
+    <script type="text/javascript" src="__MJS__/dialog.js"></script>
+</head>
+<body>
+
+<img src="__MIMG__/img_map2.png" border="0"
+     id="img" style="width: 869px"
+     usemap="#planetmap" alt="Planets" />
+
+<map name="planetmap" id="planetmap">
+    <area shape="circle" coords="95,98,98"  alt="man" />
+    <area shape="circle" coords="322,98,98"  alt="maze" />
+    <area shape="circle" coords="548,98,98"  alt="$$" />
+    <area shape="circle" coords="772,98,98"  alt="star" />
+</map>
+
+<hr>
+<button id="btn_submit" style="margin-left: 10px;
+        margin-top: 25px;
+        background-image: url('__MIMG__/img_map2.png');
+        width: 50px; height: 40px; background-position: -3%;"
+        onclick="javascript:published('publish');">
+    <span style="color: white;"> 发 布 </span>
+</button>
+</body>
+</html>
+<script>
+
+    $("#planetmap area").click(
+        function () {
+            var tip = $(this).attr('alt');
+            layer.msg(tip);
+        }
+    );
+
+</script>

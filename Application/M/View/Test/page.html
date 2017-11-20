@@ -14,6 +14,16 @@
 </p>
 </html>
 <script>
+
+    s=3;
+    function test(){
+        console.log(s);
+        var s=4;
+        console.log(s)
+
+    }
+    test();
+
     function mergeSort(arr) {  //采用自上而下的递归方法
         var len = arr.length;
         if(len < 2) {
