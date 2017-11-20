@@ -1,0 +1,81 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Percentage positioning of background-image</title>
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+    <html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>Untitled Document</title>
+
+    </head>
+<body>
+<div class="wrap">
+    <div class="box1"  style="background-position:0% 0%">
+        background-position:<br />
+        0% 0%</div>
+    <div class="box2"  style="background-position:0% 33.33333%">
+        background-position:<br />
+        0% 33.33333%</div>
+    <div class="box3"  style="background-position:0% 66.66666%">
+        background-position:<br />
+        0% 66.66666%</div>
+    <div class="box4" style="background-position:0% 100%">
+        background-position:<br />
+        0% 100%</div>
+    <p>DIVs set at 100px X 100px with their <code>background-image</code> set as the sprite graphic
+    </p>
+</div>
+
+<style>
+    body {
+        font-family:Arial, Helvetica, sans-serif
+    }
+    .box1, .box2, .box3, .box4 {
+        float:left;
+        margin-right:1em;
+        width:100px;
+        height:100px;
+        position:relative;
+        background: #F3F2E2 url('__MIMG__/1234.png') no-repeat;
+        font-size:9px;
+        text-align:center;
+
+    }
+    .box1 {
+        background-position:0% 0%;
+    }
+    .box2 {
+        background-position:35% 0%;
+
+    }
+    .box3 {
+        background-position:66.6% 0%
+
+    }
+    .box4 {
+        background: #F3F2E2 url('__MIMG__/1234.png') 100% 0% no-repeat;
+    }
+    .wrap {
+        clear:both;
+        overflow:hidden;
+    }
+    p {
+        clear:both;
+        overflow:hidden;
+    }
+</style>
+
+<img src="__MIMG__/1234.png" alt="1234" style="margin-top:2em; clear:both" />
+<p>The original sprite graphic.
+</p>
+</body>
+</html>
+
+</head>
+
+<body>
+</body>
+</html>

@@ -37,5 +37,11 @@ class HtmlController extends Controller
         $this->display();
     }
 
-
+    /**
+     * 背景图片切图定位
+     */
+    public function imgCut()
+    {
+        $this->display();
+    }
 }
