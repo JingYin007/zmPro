@@ -6,6 +6,7 @@
  * Time: 10:51
  */
 namespace M\Controller;
+use Think\Cache\Driver\Redis;
 use Think\Controller;
 
 class OrderController extends Controller
@@ -30,6 +31,10 @@ class OrderController extends Controller
      * 查询物流跟踪信息
      */
     public function Trace(){
+        /*$redis = new \Redis();
+        $redis->connect('192.168.1.150', '6379');
+        $redis->set('say','moTzxx say hello !');
+        echo $redis->get('say');*/
         //TODO 获取物流单号
         $postData = I('get.');
         $waybillCode = $postData['courier_num']?$postData['courier_num']:null;

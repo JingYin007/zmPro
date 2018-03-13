@@ -39,7 +39,11 @@ class AlgorithmController extends Controller
         $arr = [1,2,3];$arr2=[5,7,8];$arr3 = [6,6,6];
         $res = $this->myFun4($arr,$arr2,$arr3);
         var_dump($res);
+        echo '<hr>';
 
+        $ip = '255.255.255.255';
+        echo $intip = sprintf('%u',ip2long($ip)); //转换为无符号整型
+        echo '--'.long2ip($intip);
     }
 
     /**
