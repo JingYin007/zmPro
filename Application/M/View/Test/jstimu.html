@@ -1,0 +1,86 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title></title>
+    <script type="text/javascript">
+
+        //TODO 注：此处要求 IE浏览器开启了 ActiveX 控件的使用
+        var fso = new ActiveXObject("Scripting.FileSystemObject"); //加载控件
+        //定义全局变量 敏感词数组
+        var arrCiku = {};
+        // -------------- 全局变量，用来判断文本域中是否包含脏词,默认为false,即不包含脏词-------
+        var isDirty = false;
+        //读取本地dirtyword词库
+        function readFile(filename){
+            /*函数编辑区*/
+            var f1 = fso.GetFile(filename);
+            var fh = fso.OpenTextFile(f1, 1/*reading*/);
+            var content = '';
+            while ( !fh.AtEndOfStream ) {
+                content += fh.ReadLine();
+            }
+            fh.close();
+            return content;
+        }
+
+        /*
+         * 提交表单的主方法
+         * 在提交表单的时候对内容进行过滤并在文本域显示过滤后的内容
+         */
+        function submitForm1() {
+            /*函数编辑区*/
+            var filePath = "C:\\ciku.txt";
+            var strCiku = readFile(filePath);
+
+            arrCiku = strCiku.split(" ");
+            //console.log(arrCiku);
+
+            //获取文本域对象内容
+            var messageValue = document.getElementById('message').value;
+            var newMessage = filterWord(messageValue);
+            document.getElementById('message').value = newMessage;
+            if(isDirty){
+                if(confirm("你的留言中含有不恰当的词语,系统已自动为你修改,是否继续提交?")){
+                    var form = document.getElementById('message_board');
+                    form.submit();
+                }
+            }
+        }
+        /*
+         * 对传进来的messageValue过滤并返回新内容
+
+         */
+        function filterWord(messageValue) {
+            // 根据文本域的id获取文本域对象内容
+            /*函数编辑区*/
+            for(var i=0;i<arrCiku.length;i++){
+                //console.log(arrCiku[i]);
+                messageValue = filterOneWord(messageValue,arrCiku[i]);
+            }
+            return messageValue;
+        }
+        /*
+         * 这个函数用来过滤单个词语, 如果 messageValue中含有oneDirtyWord, 则用"**"替换这个oneDirtyWord
+         * messageValue --- 要过滤的语句
+
+         */
+        function filterOneWord(messageValue, oneDirtyWord) {
+            /*函数编辑区*/
+            var e = new RegExp(oneDirtyWord,"g");
+            var filterMsg = messageValue.replace(e,'**');
+            if(filterMsg !== messageValue){
+                isDirty = true;
+            }
+            return filterMsg;
+        }
+    </script>
+</head>
+<body>
+<form name="message_board" id="message_board" action="aaa.html">
+        <textarea name="message" id="message" cols="50" rows="10">
+"In a world that's changing really quickly, the biggest risk is not taking any risk."
+—— Mark Zuckerberg
+        </textarea><br/>
+    <input type="button" value="提交留言" id="submitMessage" onclick="submitForm1()"/>
+</form>
+</body>
+</html>
