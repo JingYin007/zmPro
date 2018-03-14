@@ -9,6 +9,7 @@
 namespace M\Controller;
 
 
+use Common\Controller\WXBizDataCryptController;
 use Think\Controller;
 
 class TestController extends Controller
@@ -156,5 +157,52 @@ class TestController extends Controller
 
     }
 
+    /**
+     * 测试微信解密 用户数据
+     *
+     * AppID: wxdce3cdc5145256b4
+     * AppSecret: 4f14b1348c4db195e8e78c15030b18fe
+     *
+     * https://api.weixin.qq.com/sns/jscode2session?appid=wxdce3cdc5145256b4&secret=4f14b1348c4db195e8e78c15030b18fe&js_code=0115thYc0cTYPu1PEzXc0YG5Yc05thY-&grant_type=authorization_code
+     */
+    public function wxDecrypt(){
+
+        $appid = 'wxdce3cdc5145256b4';
+        $secret = '4f14b1348c4db195e8e78c15030b18fe';
+        $code = '061Q2MbY0k0FM22NTLbY0ID0cY0Q2Mbt';
+
+        $arrSess = $this->getWxSession($appid,$secret,$code);
+        $sessionKey = $arrSess['session_key'];
+
+        $encryptedData= "Avh4OscWiDJvbZjMoWmIZq4mpQZDQe3D5UED2M2yjuBudH+i3Mt0X9sg48wcLa9jr9IXwA0SNUWX0WYR8o7SUroUJBKqvKjLCXTRcqEswVmQcWspaOuPIesuvoOvrz91MqkaYbV1y0LErv8NBnHcVENxpikPi1UHZbt7popemdqISA9GDP6HgnKgCxYs8aRkM5kmrguJHvvpMDn5xjVA2XAUogDe2UEJq46j9SNwSfIf+FWa3+28h1RTJERKjLr+ExRKcifhKF85+yPdTzugp2lEkjAEPwh4yg67GV2q5FKholFZvvO/qUgkXEzX27gSzUXQijWTCOzaVv8qS4C6nOcP3OAT1SFw10Ay5o7nxMlfe6q9TeohsMwRMQ5rEbmFTd5ZbCyvt4AUB/Qf424d/532MsOZ2bc3AcEKxgCSQp/7OvgeNQfO5vE6kKvng0i3BBT5nCJ/9dDWR8ZKtaH1sg==";
+        $iv = "tLqWn2peGBmKn7uPWrtDFA==";
+
+        $pc = new WXBizDataCryptController($appid, $sessionKey);
+        $errCode = $pc->decryptData($encryptedData, $iv, $data );
+
+        if ($errCode == 0) {
+            print($data . "\n");
+        } else {
+            print($errCode . "\n");
+        }
+    }
+
+    /**
+     * 登录凭证校验：使用 临时登录凭证code 获取 session_key 和 openid 等
+     * @param $appid 小程序唯一标识
+     * @param $secret 小程序的 app secret
+     * @param $code 登录时获取的 code
+     * @param string $grant_type  默认填写 authorization_code
+     * @return mixed
+     */
+    public function getWxSession($appid,$secret,$code,$grant_type = 'authorization_code'){
+        $req_url =
+            'https://api.weixin.qq.com/sns/jscode2session?appid='.$appid
+            .'&secret='.$secret.'&js_code=' .$code
+            .'&grant_type='.$grant_type;
+        $json_data = file_get_contents($req_url);
+        $arrData = json_decode($json_data,true);
+        return $arrData;
+    }
 
 }
