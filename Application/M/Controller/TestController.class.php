@@ -121,10 +121,6 @@ class TestController extends Controller
         $replace = array('&nbsp;','&nbsp;','<br />','<br />');
         $message =  preg_replace($pattern, $replace, $_POST['message']);
 
-
-
-
-
         //找出不是邮箱的字符串
         $message = 'kkuggscdd test001@qq.com asda test002@qq.com okam test003@aa.com ';
         $preg = "/([a-z0-9\-_\.]+@[a-z0-9]+\.[a-z0-9\-_\.]+)+/i";
@@ -144,7 +140,6 @@ class TestController extends Controller
                 $newMsg .= $tagStr.$val;
                 $start = $index2 + strlen($val);
             }
-
             echo $newMsg;
         }else{
             //遍历敏感词数组，依次进行字符的替换
@@ -152,9 +147,7 @@ class TestController extends Controller
                 $message = str_replace($v,'**',$message);
             }
         }
-
         //echo $message;
-
     }
 
     /**
@@ -162,31 +155,37 @@ class TestController extends Controller
      *
      * AppID: wxdce3cdc5145256b4
      * AppSecret: 4f14b1348c4db195e8e78c15030b18fe
-     *
-     * https://api.weixin.qq.com/sns/jscode2session?appid=wxdce3cdc5145256b4&secret=4f14b1348c4db195e8e78c15030b18fe&js_code=0115thYc0cTYPu1PEzXc0YG5Yc05thY-&grant_type=authorization_code
      */
     public function wxDecrypt(){
 
         $appid = 'wxdce3cdc5145256b4';
         $secret = '4f14b1348c4db195e8e78c15030b18fe';
-        $code = '061Q2MbY0k0FM22NTLbY0ID0cY0Q2Mbt';
+        $code = $_GET['code']?$_GET['code']:0;
 
         $arrSess = $this->getWxSession($appid,$secret,$code);
         $sessionKey = $arrSess['session_key'];
 
-        $encryptedData= "Avh4OscWiDJvbZjMoWmIZq4mpQZDQe3D5UED2M2yjuBudH+i3Mt0X9sg48wcLa9jr9IXwA0SNUWX0WYR8o7SUroUJBKqvKjLCXTRcqEswVmQcWspaOuPIesuvoOvrz91MqkaYbV1y0LErv8NBnHcVENxpikPi1UHZbt7popemdqISA9GDP6HgnKgCxYs8aRkM5kmrguJHvvpMDn5xjVA2XAUogDe2UEJq46j9SNwSfIf+FWa3+28h1RTJERKjLr+ExRKcifhKF85+yPdTzugp2lEkjAEPwh4yg67GV2q5FKholFZvvO/qUgkXEzX27gSzUXQijWTCOzaVv8qS4C6nOcP3OAT1SFw10Ay5o7nxMlfe6q9TeohsMwRMQ5rEbmFTd5ZbCyvt4AUB/Qf424d/532MsOZ2bc3AcEKxgCSQp/7OvgeNQfO5vE6kKvng0i3BBT5nCJ/9dDWR8ZKtaH1sg==";
-        $iv = "tLqWn2peGBmKn7uPWrtDFA==";
+        $encryptedData= $_GET['encryptedData'];
+        $iv = $_GET['iv'];
 
         $pc = new WXBizDataCryptController($appid, $sessionKey);
         $errCode = $pc->decryptData($encryptedData, $iv, $data );
 
         if ($errCode == 0) {
-            print($data . "\n");
+            $loginKey =  md5(base64_encode(time()+rand(0000,50000)));
+            session('wxLoginKey',$loginKey);
+            return showMsg(1,'Success',['loginKey'=>$loginKey,'userInfo'=>$data]);
         } else {
-            print($errCode . "\n");
+            return showMsg(0,'Error',$_GET);
         }
     }
 
+    public function getNewData($data){
+        foreach ($data as $key => $val){
+            $data[$key]['XXXXXX'] = 'FFFFFFSSS';
+        }
+        return $data;
+    }
     /**
      * 登录凭证校验：使用 临时登录凭证code 获取 session_key 和 openid 等
      * @param $appid 小程序唯一标识
