@@ -176,16 +176,10 @@ class TestController extends Controller
             session('wxLoginKey',$loginKey);
             return showMsg(1,'Success',['loginKey'=>$loginKey,'userInfo'=>$data]);
         } else {
-            return showMsg(0,'Error',$_GET);
+            return showMsg(0,'Error',$errCode);
         }
     }
 
-    public function getNewData($data){
-        foreach ($data as $key => $val){
-            $data[$key]['XXXXXX'] = 'FFFFFFSSS';
-        }
-        return $data;
-    }
     /**
      * 登录凭证校验：使用 临时登录凭证code 获取 session_key 和 openid 等
      * @param $appid 小程序唯一标识
