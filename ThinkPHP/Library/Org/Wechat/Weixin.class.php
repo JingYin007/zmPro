@@ -1178,11 +1178,23 @@ class Weixin {
 			"offset" => 0, 
 			"count" => 20, 
 			));
-
-
 		return $this->http_post('https://api.weixin.qq.com/cgi-bin/material/batchget_material?access_token='.$this->getaccesstoken(),$data);
-	
-
 	}
+	
+    /**
+     * 根据用户已获得的 openID 获取其他信息 （主要为 unionID）
+     */
+    public function getUnionidByOpenid($openID = ''){
+        $url = "https://api.weixin.qq.com/cgi-bin/user/info?access_token="
+            .$this->getaccesstoken()
+            ."&openid=".$openID."&lang=zh_CN";
+        $jsonRes = $this->http_get($url);
+        if ($jsonRes){
+            $arrRes = json_decode($jsonRes, true);
+            return $arrRes['unionid'];
+        }else{
+            return '';
+        }
+    }
 }
 ?>
