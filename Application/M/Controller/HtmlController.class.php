@@ -44,4 +44,7 @@ class HtmlController extends Controller
     {
         $this->display();
     }
+    public function imgsop(){
+        $this->display();
+    }
 }
