@@ -67,5 +67,4 @@ class HtmlController extends Controller
         createSharePng($confData, "Public/images/share_" . time() . ".png");
         echo 'Hello My Dear~';
     }
-
 }
