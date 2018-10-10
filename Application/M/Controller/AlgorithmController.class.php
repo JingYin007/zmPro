@@ -9,6 +9,7 @@
 namespace M\Controller;
 
 
+use Common\Model\ZmModel;
 use Think\Controller;
 
 /**
@@ -518,7 +519,15 @@ class AlgorithmController extends Controller
         return $arr;
     }
 
+/*---TODO------------------拓展学习-----------------------------------------------------*/
 
+public function deepCate(){
+    $zmModel = new ZmModel();
+    $cateList = $zmModel->deepForCates();
+    //var_dump($cateList);
+    $this->assign('cateList',$cateList);
+    $this->display();
+}
 
 
 
