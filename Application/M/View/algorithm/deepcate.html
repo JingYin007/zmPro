@@ -2,14 +2,37 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="format-detection" content="telephone=no">
     <title>Title</title>
 </head>
 <body>
+<h4>递归方式获取 无限级分类数据</h4>
 <select>
-    <volist name="cateList" id="vo">
-        <option>{$vo.cate_name}</option>
+    <volist name="cateListDown" id="vo">
+        <option {$vo.selected}>{$vo.cate_name}</option>
     </volist>
-
 </select>
+<br>
+<br>
+<volist name="cateListUp" id="vo">
+    <a href="#">{$vo.cate_name}</a>>&nbsp;
+</volist>
+
+<hr>
+<br>
+<h4>全路径方式获取 无限级分类数据</h4>
+<select>
+    <volist name="cateListPathDown" id="vo">
+        <option {$vo.selected}>{$vo.cate_name}</option>
+    </volist>
+</select>
+<br>
+<br>
+
+<volist name="cateListPathUp" id="vo">
+    <a href="#">{$vo.cate_name}</a>>&nbsp;
+</volist>
 </body>
 </html>

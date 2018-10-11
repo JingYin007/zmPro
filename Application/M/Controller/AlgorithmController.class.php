@@ -523,9 +523,17 @@ class AlgorithmController extends Controller
 
 public function deepCate(){
     $zmModel = new ZmModel();
-    $cateList = $zmModel->deepForCates();
-    //var_dump($cateList);
-    $this->assign('cateList',$cateList);
+    $cateListDown = $zmModel->deepCatesForDown(0,6);
+    $cateListUp = $zmModel->deepCatesForUp(10);
+
+    $cateListPathDown = $zmModel->deepCatesFullPathForDown();
+    $cateListPathUp = $zmModel->deepCatesFullPathForUp(10);
+    //var_dump($cateListPathUp);
+    $this->assign('cateListDown',$cateListDown);
+    $this->assign('cateListUp',$cateListUp);
+
+    $this->assign('cateListPathDown',$cateListPathDown);
+    $this->assign('cateListPathUp',$cateListPathUp);
     $this->display();
 }
 
