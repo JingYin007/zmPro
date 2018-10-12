@@ -7,13 +7,14 @@
  */
 
 namespace Common\Model;
+use Think\Model;
 
 /**
  * 个人测试逻辑中需要的 Model类
  * Class zmModel
  * @package Common\Model
  */
-class ZmModel extends BaseModel
+class ZmModel extends Model
 {
     private $db_cate;
     public function __construct()
