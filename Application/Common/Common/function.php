@@ -41,7 +41,6 @@ function expressinfo($order){
     header('Content-Type:text/html; charset=utf-8');
     $express = new \Think\Express();
     $result  = $express -> getorder($order);
-    // var_dump($result);
     return $result;
 }
 /**
@@ -427,8 +426,7 @@ function curl_get_contents($url){
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);        //返回结果
     $r=curl_exec($ch);
     curl_close($ch);
-    $res = json_decode($r,true);
-    return $res;
+    return $r;
 }
 
 function send_verify($mobile,$name){
